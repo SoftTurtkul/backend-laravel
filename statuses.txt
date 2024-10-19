@@ -1,0 +1,14 @@
+Order statuses:
+-1 - bekor qilindi
+0 - yangi buyurtma
+1 - elonda
+11 - qabul qilingan
+2 - tayyor bolgan
+3 -
+
+TaxiOrder statuses:
+-1 -
+0 - yangi buyurtma
+1 - driver qabul qildi
+2 - yetib keldi va start qildi
+3 - manzilga yetkazildi
