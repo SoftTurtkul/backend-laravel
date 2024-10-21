@@ -28,7 +28,8 @@ class AuthController extends Controller {
         list($token, $model) = $this->service->login(new User(), $request->validated());
         if ($token) {
             return $this->success([
-                'token' => $token
+                'token' => $token,
+                'model'=>$model
             ]);
         }
 
