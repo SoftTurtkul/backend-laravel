@@ -75,7 +75,7 @@ Route::middleware('auth:sanctum')->group(function() {
 
     Route::prefix('/customers')->group(function() {
 //        Route::get('/get-partners', [PartnerController::class, 'index']);
-        Route::get('/{partner}/get-products', [ProductController::class, 'categoryProducts']);
+//        Route::get('/{partner}/get-products', [ProductController::class, 'categoryProducts']);
         Route::post('/set-order', [OrderController::class, 'store']);
         Route::get('/{customer}/get-orders', [OrderController::class, 'getDeliveryOrders']);
         Route::get('/{customer}/get-finished-orders', [OrderController::class, 'getOrdersByStatus']);
