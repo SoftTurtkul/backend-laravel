@@ -11,11 +11,11 @@ class PaymeController extends Controller
         $auth = \request()->header('Authorization');
         $token = str_replace("Bearer ", "", $auth);
         if (!base64_encode(self::user . ":" . self::test_token) == $token) {
-            return [
+            return json_encode([
                 "error" => [
                     "code" => -31050,
                 ]
-            ];
+            ]);
         }
         $data = \request()->toArray();
         switch ($data['method']) {
