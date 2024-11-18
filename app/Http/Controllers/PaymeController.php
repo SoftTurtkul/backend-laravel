@@ -10,6 +10,7 @@ class PaymeController extends Controller
     {
         $auth = \request()->header('Authorization');
         $token = str_replace("Bearer ", "", $auth);
+        return $token . '+' . base64_encode(self::user . ":" . $token);
         if (!base64_encode(self::user . ":" . self::test_token) == $token) {
             return json_encode([
                 "error" => [
