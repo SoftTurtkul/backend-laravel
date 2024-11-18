@@ -9,8 +9,7 @@ class PaymeController extends Controller
     public function index()
     {
         $auth = \request()->header('Authorization');
-        $token = str_replace("Bearer ", "", $auth);
-        return $token . '+' . base64_encode(self::user . ":" . $token);
+        $token = str_replace("Basic ", "", $auth);
         if (!base64_encode(self::user . ":" . self::test_token) == $token) {
             return json_encode([
                 "error" => [
