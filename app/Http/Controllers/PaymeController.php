@@ -14,6 +14,11 @@ class PaymeController extends Controller
             return json_encode([
                 "error" => [
                     "code" => -32504,
+                    "message"=>[
+                        "ru"=>"Not Allowed",
+                        "en"=>"Not Allowed",
+                        "uz"=>"Not Allowed",
+                    ]
                 ]
             ]);
         }
