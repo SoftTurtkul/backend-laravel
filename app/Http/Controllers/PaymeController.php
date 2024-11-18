@@ -13,7 +13,7 @@ class PaymeController extends Controller
         if (base64_encode(self::user . ":" . self::test_token) != $token) {
             return json_encode([
                 "error" => [
-                    "code" => -31050,
+                    "code" => -32504,
                 ]
             ]);
         }
