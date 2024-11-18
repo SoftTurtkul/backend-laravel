@@ -38,7 +38,7 @@ class PaymeController extends Controller
                 "uz" => "Order not found",
             ]);
         }
-        if ($order->total_price != $params['amount']) {
+        if ($order->total_price*100 != $params['amount']) {
             return $this->Error(-31001, [
                 'en' => "Order price mismatch",
                 "ru" => "Order price mismatch",
