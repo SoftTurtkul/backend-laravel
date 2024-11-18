@@ -28,9 +28,9 @@ class PaymeController extends Controller
         }
     }
 
-    private function CheckPerformTransaction(array $params):string
+    private function CheckPerformTransaction(array $params)
     {
-        $order = Order::query()->where('id', $params['account']['order_id'])->first();
+        $order = Order::query()->where(['id' => $params['account']['order_id'], 'status' => 0])->first();
         if (!$order) {
             return $this->Error(-31050, [
                 'en' => "Order not found",
