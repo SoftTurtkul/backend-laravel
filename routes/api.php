@@ -22,12 +22,12 @@ use App\Http\Controllers\UserController;
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('/customers')->group(function() {
+Route::prefix('/customers')->group(function () {
     Route::get('/get-partners', [PartnerController::class, 'index']);
     Route::get('/{partner}/get-products', [ProductController::class, 'categoryProducts']);
 });
-Route::middleware('auth:sanctum')->group(function() {
-    Route::prefix('/admin')->group(function() {
+Route::middleware('auth:sanctum')->group(function () {
+    Route::prefix('/admin')->group(function () {
         Route::resource('users', UserController::class);
         Route::post('/drivers/{driver}/add-sum', [DriverController::class, 'addSum']);
         Route::resource('drivers', DriverController::class);
@@ -40,7 +40,7 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::post('drivers/{driver}/activate', [DriverController::class, 'activate']);
     });
 
-    Route::prefix('/drivers')->group(function() {
+    Route::prefix('/drivers')->group(function () {
         Route::get('/get-new-orders', [TaxiOrderController::class, 'getNewOrders']);
         Route::post('/merge-order', [DriverController::class, 'mergeOrder']);
         Route::post('/add-sum', [DriverController::class, 'addSum']);
@@ -54,7 +54,7 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::post('/{driver}', [DriverController::class, 'history']);
     });
 
-    Route::prefix('/partners')->group(function() {
+    Route::prefix('/partners')->group(function () {
         Route::resource('categories', CategoryController::class);
         Route::resource('products', ProductController::class);
         Route::get('/{partner}/orders', [OrderController::class, 'index']);
@@ -65,7 +65,7 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::put('/{partner}', [PartnerController::class, 'update']);
     });
 
-    Route::prefix('/operators')->group(function() {
+    Route::prefix('/operators')->group(function () {
         Route::post('/driver-location', [DriverController::class, 'check']);
         Route::post('/create-order', [TaxiOrderController::class, 'store']);
         Route::get('/get-delivery-orders', [OrderController::class, 'getOrdersByStatus']);
@@ -74,7 +74,7 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::put('/{user}', [UserController::class, 'update']);
     });
 
-    Route::prefix('/customers')->group(function() {
+    Route::prefix('/customers')->group(function () {
 //        Route::get('/get-partners', [PartnerController::class, 'index']);
 //        Route::get('/{partner}/get-products', [ProductController::class, 'categoryProducts']);
         Route::post('/set-order', [OrderController::class, 'store']);
@@ -87,7 +87,7 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::post('{update}');
     });
 
-    Route::prefix('/clients')->group(function() {
+    Route::prefix('/clients')->group(function () {
         Route::post('/driver-location', [DriverController::class, 'check']);
         Route::post('/create-order', [TaxiOrderController::class, 'store']);
         Route::get('/{client}', [UserController::class, 'show']);
@@ -114,7 +114,7 @@ Route::post('/client/verify', [AuthController::class, 'verifyClient']);
 Route::post('/receive-status', [AuthController::class, 'receive'])->name('receive_status');
 
 /* Any route */
-Route::any('/{all?}', function() {
+Route::any('/{all?}', function () {
     return response()->json([
         'msg' => "Ushbu sohaga kirishga ruxsat berilmagan"
     ], 401);
