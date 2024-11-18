@@ -7,7 +7,7 @@ class PaymeController extends Controller
     const user="Paycom";
     public function index()
     {
-        dd(\request()->header('Authorization'));
+        return \request()->header('Authorization');
         $data = \request()->toArray();
         switch ($data['method']) {
             case 'CheckPerformTransaction':
