@@ -23,7 +23,18 @@ class PaymeController extends Controller
         $data = \request()->toArray();
         switch ($data['method']) {
             case 'CheckPerformTransaction':
-                return $this->CheckPerformTransaction($data['params']);
+                $perform = $this->CheckPerformTransaction($data['params']);
+                if ($perform === true) {
+                    return json_encode([
+                        "result" => [
+                            "allow" => true
+                        ]
+                    ]);
+                }
+                return $perform;
+                break;
+            case 'CreateTransaction':
+                return $this->CreateTransaction($data['params']);
                 break;
         }
     }
@@ -38,18 +49,14 @@ class PaymeController extends Controller
                 "uz" => "Order not found",
             ]);
         }
-        if ($order->total_price*100 != $params['amount']) {
+        if ($order->total_price * 100 != $params['amount']) {
             return $this->Error(-31001, [
                 'en' => "Order price mismatch",
                 "ru" => "Order price mismatch",
                 "uz" => "Order price mismatch",
             ]);
         }
-        return json_encode([
-            "result" => [
-                "allow" => true
-            ]
-        ]);
+        return true;
     }
 
     private function Error($code, $message)
@@ -60,6 +67,13 @@ class PaymeController extends Controller
                 "message" => $message
             ]
         ]);
+    }
+
+    private function CreateTransaction($params)
+    {
+        if (($perform = $this->CheckPerformTransaction($params)) !== true) {
+            return $perform;
+        }
     }
 
 }
