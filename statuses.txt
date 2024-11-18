@@ -1,10 +1,12 @@
 Order statuses:
+-2 To'lashda xatolik
 -1 - bekor qilindi
 0 - yangi buyurtma
-1 - elonda
-11 - qabul qilingan
+1 - Qabul qilingan
 2 - tayyor bolgan
-3 -
+3 - jo'natilgan
+4 - yetkazilgan
+31 - yo'lga chiqdi
 
 TaxiOrder statuses:
 -1 -
