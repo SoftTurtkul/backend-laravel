@@ -10,7 +10,7 @@ class PaymeController extends Controller
     {
         $auth = \request()->header('Authorization');
         $token = str_replace("Basic ", "", $auth);
-        if (!base64_encode(self::user . ":" . self::test_token) == $token) {
+        if (base64_encode(self::user . ":" . self::test_token) != $token) {
             return json_encode([
                 "error" => [
                     "code" => -31050,
