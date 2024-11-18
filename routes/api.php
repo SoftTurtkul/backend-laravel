@@ -97,7 +97,7 @@ Route::middleware('auth:sanctum')->group(function() {
 /* Authentication */
 Route::get('/car-types', [CarTypeController::class, 'index']);
 Route::get('/tariffs', [TariffController::class, 'index']);
-Route::get('/payme', [TariffController::class, 'index']);
+Route::post('/payme', [TariffController::class, 'index']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/driver/login', [AuthController::class, 'driver']);
 Route::post('/driver/verify', [AuthController::class, 'verify']);
