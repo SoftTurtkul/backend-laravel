@@ -30,7 +30,7 @@ class PaymeController extends Controller
 
     private function CheckPerformTransaction(array $params)
     {
-        $order = Order::query()->where(['id' => $params['account']['order_id'], 'status' => 0])->first();
+        $order = Order::query()->where(['id' => $params['account']['order_id'], 'status' => 0])->get()->first();
         if (!$order) {
             return $this->Error(-31050, [
                 'en' => "Order not found",
@@ -38,6 +38,18 @@ class PaymeController extends Controller
                 "uz" => "Order not found",
             ]);
         }
+        if ($order->total_price != $params['amount']) {
+            return $this->Error(-31001, [
+                'en' => "Order price mismatch",
+                "ru" => "Order price mismatch",
+                "uz" => "Order price mismatch",
+            ]);
+        }
+        return json_encode([
+            "result" => [
+                "allow" => true
+            ]
+        ]);
     }
 
     private function Error($code, $message)
