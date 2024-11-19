@@ -44,7 +44,7 @@ class PaymeController extends Controller
                     return json_encode([
                         "result" => [
                             'create_time' => Transaction::datetime2timestamp($transaction['create_time']),
-                            'perform_time' => Transaction::datetime2timestamp($transaction['perform_time']),
+                            'perform_time' => Transaction::datetime2timestamp($transaction['perform_time'])??0,
                             'cancel_time' => $transaction['cancel_time'] ?? 0,
                             'transaction' => (string)$transaction['id'],
                             'state' => $transaction['state'],
@@ -105,7 +105,7 @@ class PaymeController extends Controller
             if (Transaction::query()->where(['order_id' => $params['account']['order_id']])
                 ->whereIn('state', [Transaction::STATE_CREATED, Transaction::STATE_COMPLETED])
                 ->exists()) {
-                return $this->Error(-31001, [
+                return $this->Error(-31050, [
                     'en' => 'There is other active/completed transaction for this order.',
                     'ru' => 'There is other active/completed transaction for this order.',
                     'uz' => 'There is other active/completed transaction for this order.',
