@@ -88,13 +88,15 @@ class PaymeController extends Controller
             }
             $create_time = Transaction::totimestamp(true);
             $transaction = new Transaction();
-            $transaction->paycom_transaction_id = $params['id'];
-            $transaction->paycom_time = $params['time'];
-            $transaction->paycom_time_datetime = Transaction::timestamp2datetime($params['time']);
-            $transaction->create_time = Transaction::timestamp2datetime($create_time);
-            $transaction->state = Transaction::STATE_CREATED;
-            $transaction->amount = $params['amount'];
-            $transaction->order_id = $params['account']['order_id'];
+            $transaction->fill([
+                'paycom_transaction_id' => $params['id'],
+                'paycom_time' => $params['time'],
+                'paycom_time_datetime' => Transaction::timestamp2datetime($params['time']),
+                'create_time' => Transaction::timestamp2datetime($create_time),
+                'state' => Transaction::STATE_CREATED,
+                'amount' => $params['amount'],
+                'order_id' => $params['account']['order_id'],
+            ]);
             $transaction->save(); // after save $transaction->id will be populated with the newly created transaction's id.
 
             // send response
