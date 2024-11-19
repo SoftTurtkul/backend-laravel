@@ -7,7 +7,7 @@ use App\Models\Transaction;
 
 class PaymeController extends Controller
 {
-    const test_token = "Drb4rksirx6NhWqJa@R%YeSj3jC&aTRKUbQK";
+    const test_token = "4aa0n805So%uvv0r@jmCjexE%?is6NtJKtGx";
     const user = "Paycom";
 
     public function index()
