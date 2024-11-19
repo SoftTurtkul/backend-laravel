@@ -79,6 +79,14 @@ class PaymeController extends Controller
         $order = Order::query()->where(['id' => $params['account']['order_id'], 'status' => 0])->get()->first();
         $isExists = Transaction::query()->where(['paycom_transaction_id' => $params['id']])->exists();
         if (!$isExists) {
+            $isExists=Transaction::query()->where(['order_id'=>$params['account']['order_id']])->whereIn('state',[Transaction::STATE_CREATED,Transaction::STATE_COMPLETED])->exists();
+            if($isExists){
+               return $this->Error(-31050, [
+                   'en' => "Transaction already exists",
+                   "ru" => "Transaction already exists",
+                   "uz" => "Transaction already exists",
+               ]);
+            }
             //Yo'q bo'lsa\
             if (Transaction::timestamp2milliseconds(1 * $params['time']) - Transaction::timestamp(true) >= Transaction::TIMEOUT) {
                 return $this->Error(-31050, [
