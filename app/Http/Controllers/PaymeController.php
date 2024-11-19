@@ -195,7 +195,7 @@ class PaymeController extends Controller
                 Order::query()->where(['id' => $transaction['order_id']])->get()->first()->update(['state' => Transaction::STATE_COMPLETED]);
                 // todo: Mark transaction as completed
                 $perform_time = Transaction::timestamp(true);
-                Transaction::query()->with(['paycom_transaction_id' => $params['id']])
+                Transaction::query()->where(['paycom_transaction_id' => $params['id']])
                     ->get()
                     ->first()
                     ->update([
