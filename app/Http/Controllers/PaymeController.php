@@ -105,7 +105,7 @@ class PaymeController extends Controller
 
                 "result" => [
                     "create_time" => $create_time,
-                    "transaction" => $transaction["id"],
+                    "transaction" => (string)$transaction["id"],
                     "state"       => $transaction["state"],
                     "receivers"   => null,
                 ]
