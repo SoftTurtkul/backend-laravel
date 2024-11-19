@@ -56,7 +56,7 @@ class PaymeController extends Controller
                     "ru" => "Not Allowed",
                     "en" => "Not Allowed",
                     "uz" => "Not Allowed",
-                ])
+                ]);
         }
     }
 
