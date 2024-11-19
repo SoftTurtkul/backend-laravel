@@ -138,4 +138,18 @@ class Transaction extends Model
         // convert to datetime string
         return date('Y-m-d H:i:s', $timestamp);
     }
+    /**
+     * Converts timestamp value from milliseconds to seconds.
+     * @param int $timestamp timestamp in milliseconds.
+     * @return int timestamp in seconds.
+     */
+    public static function timestamp2seconds($timestamp)
+    {
+        // is it already as seconds
+        if (strlen((string)$timestamp) == 10) {
+            return $timestamp;
+        }
+
+        return floor(1 * $timestamp / 1000);
+    }
 }
