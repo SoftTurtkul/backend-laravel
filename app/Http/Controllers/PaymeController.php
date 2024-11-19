@@ -192,7 +192,7 @@ class PaymeController extends Controller
         switch ($transaction['state']) {
             case Transaction::STATE_CREATED:
 //                $params = ['order_id' => $transaction['order_id']];
-                Order::query()->where(['id' => $transaction['order_id']])->get()->first()->update(['state' => Transaction::STATE_COMPLETED])->save();
+                Order::query()->where(['id' => $transaction['order_id']])->get()->first()->update(['status' => Transaction::STATE_COMPLETED]);
                 // todo: Mark transaction as completed
                 $perform_time = Transaction::timestamp(true);
                 Transaction::query()->where(['paycom_transaction_id' => $params['id']])
