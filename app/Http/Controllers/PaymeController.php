@@ -47,7 +47,7 @@ class PaymeController extends Controller
                             'perform_time'=>$transaction['perform_time'],
                             'cancel_time'=>$transaction['cancel_time']??0,
                             'transaction'=>$transaction['id'],
-                            'status'=>$transaction['status'],
+                            'state'=>$transaction['state'],
                             'reason'=>$transaction['reason'],
                         ]
                     ]);
