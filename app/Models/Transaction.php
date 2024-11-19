@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
+    public $timestamps = false;
     const TIMEOUT = 43200000;
 
     const STATE_CREATED                  = 1;
