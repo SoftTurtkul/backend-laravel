@@ -101,11 +101,10 @@ class PaymeController extends Controller
             $transaction->save(); // after save $transaction->id will be populated with the newly created transaction's id.
 
             // send response
-            return \response()->json([
-                'create_time' => $create_time,
-                'transaction' => $transaction['id'],
-                'state' => $transaction['state'],
-                'receivers' => null,
+            return json_encode([
+                "result" => [
+                    "allow" => true
+                ]
             ]);
 
         } else {
