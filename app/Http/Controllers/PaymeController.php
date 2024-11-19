@@ -102,6 +102,15 @@ class PaymeController extends Controller
         $order = Order::query()->where(['id' => $params['account']['order_id'], 'status' => Order::STATE_WAITING_PAY])->get()->first();
         $isExists = Transaction::query()->where(['paycom_transaction_id' => $params['id']])->exists();
         if (!$isExists) {
+            if (Transaction::query()->where(['order_id' => $params['account']['order_id']])
+                ->whereIn('state', [Transaction::STATE_CREATED, Transaction::STATE_COMPLETED])
+                ->exists()) {
+                return $this->Error(-31001, [
+                    'en' => 'There is other active/completed transaction for this order.',
+                    'ru' => 'There is other active/completed transaction for this order.',
+                    'uz' => 'There is other active/completed transaction for this order.',
+                ]);
+            }
             //Yo'q bo'lsa\
             if (Transaction::timestamp2milliseconds(1 * $params['time']) - Transaction::timestamp(true) >= Transaction::TIMEOUT) {
                 return $this->Error(-31050, [
