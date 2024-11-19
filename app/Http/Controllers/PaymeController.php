@@ -12,6 +12,7 @@ class PaymeController extends Controller
 
     public function index()
     {
+
         $auth = \request()->header('Authorization');
         $token = str_replace("Basic ", "", $auth);
         if (base64_encode(self::user . ":" . self::test_token) != $token) {
@@ -100,10 +101,10 @@ class PaymeController extends Controller
             $transaction->save(); // after save $transaction->id will be populated with the newly created transaction's id.
 
             // send response
-            return json_encode([
+            return \response()->json([
                 'create_time' => $create_time,
-                'transaction' => $transaction->id,
-                'state' => $transaction->state,
+                'transaction' => $transaction['id'],
+                'state' => $transaction['state'],
                 'receivers' => null,
             ]);
 
