@@ -102,9 +102,10 @@ class PaymeController extends Controller
 
             // send response
             return json_encode([
-                "result" => [
-                    "allow" => true
-                ]
+                "create_time" => $create_time,
+                "transaction" => $transaction['id'],
+                "state"       => $transaction['state'],
+                "receivers"   => null,
             ]);
 
         } else {
