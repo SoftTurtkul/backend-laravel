@@ -7,6 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model {
     use HasFactory;
+    /** Order is available for sell, anyone can buy it. */
+//    const STATE_AVAILABLE = 0;
+
+    /** Pay in progress, order must not be changed. */
+    const STATE_WAITING_PAY = 0;
+
+    /** Order completed and not available for sell. */
+    const STATE_PAY_ACCEPTED = 10;
+
+    /** Order is cancelled. */
+    const STATE_CANCELLED = -2;
+
 
     protected $fillable = [
         'customer_id', 'driver_id', 'partner_id', 'total_price',

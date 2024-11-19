@@ -1,12 +1,16 @@
 Order statuses:
--2 To'lashda xatolik
+-2 To'lashda xatolik // PayMe Cancelled
 -1 - bekor qilindi
-0 - yangi buyurtma
-1 - Qabul qilingan
-2 - tayyor bolgan
-3 - jo'natilgan
-4 - yetkazilgan
-31 - yo'lga chiqdi
+0 - yangi buyurtma //Waiting PayMe
+10 - To'lov tasdiqlandi //PayMe Completed
+1 - Qabul qilingan //Partner accepted
+2 - tayyor bolgan //Partner completed
+3 - jo'natilgan //Courier accepted
+31 - yo'lga chiqdi //Courier on way
+4 - yetkazilgan // Couriure completed
+
+
+
 
 TaxiOrder statuses:
 -1 -

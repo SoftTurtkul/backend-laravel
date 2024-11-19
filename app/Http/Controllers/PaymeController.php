@@ -39,16 +39,16 @@ class PaymeController extends Controller
                 return $this->CreateTransaction($data['params']);
                 break;
             case 'CheckTransaction':
-                if(Transaction::query()->where(['paycom_transaction_id'=>$data['params']['id']])->exists()){
-                    $transaction = Transaction::query()->where(['paycom_transaction_id'=>$data['params']['id']])->first()->toArray();
+                if (Transaction::query()->where(['paycom_transaction_id' => $data['params']['id']])->exists()) {
+                    $transaction = Transaction::query()->where(['paycom_transaction_id' => $data['params']['id']])->first()->toArray();
                     return json_encode([
                         "result" => [
-                            'create_time'=>Transaction::datetime2timestamp($transaction['create_time']),
-                            'perform_time'=>Transaction::datetime2timestamp($transaction['perform_time']),
-                            'cancel_time'=>$transaction['cancel_time']??0,
-                            'transaction'=>(string)$transaction['id'],
-                            'state'=>$transaction['state'],
-                            'reason'=>$transaction['reason'],
+                            'create_time' => Transaction::datetime2timestamp($transaction['create_time']),
+                            'perform_time' => Transaction::datetime2timestamp($transaction['perform_time']),
+                            'cancel_time' => $transaction['cancel_time'] ?? 0,
+                            'transaction' => (string)$transaction['id'],
+                            'state' => $transaction['state'],
+                            'reason' => $transaction['reason'],
                         ]
                     ]);
                 }
@@ -57,12 +57,16 @@ class PaymeController extends Controller
                     "en" => "Not Allowed",
                     "uz" => "Not Allowed",
                 ]);
+                break;
+            case 'PerformTransaction':
+                return $this->PerformTransaction($data['params']);
+                break;
         }
     }
 
     private function CheckPerformTransaction(array $params)
     {
-        $order = Order::query()->where(['id' => $params['account']['order_id'], 'status' => 0])->get()->first();
+        $order = Order::query()->where(['id' => $params['account']['order_id'], 'status' => Order::STATE_WAITING_PAY])->get()->first();
         if (!$order) {
             return $this->Error(-31050, [
                 'en' => "Order not found",
@@ -77,7 +81,7 @@ class PaymeController extends Controller
                 "uz" => "Order price mismatch",
             ]);
         }
-        if(Transaction::query()->where(['order_id' => $order->id])->whereIn('state',[Transaction::STATE_CREATED,Transaction::STATE_COMPLETED])->exists()){
+        if (Transaction::query()->where(['order_id' => $order->id])->whereIn('state', [Transaction::STATE_CREATED, Transaction::STATE_COMPLETED])->exists()) {
             return $this->Error(-31050, [
                 'en' => "Transaction already exists",
                 "ru" => "Transaction already exists",
@@ -102,7 +106,7 @@ class PaymeController extends Controller
         if (($perform = $this->CheckPerformTransaction($params)) !== true) {
             return $perform;
         }
-        $order = Order::query()->where(['id' => $params['account']['order_id'], 'status' => 0])->get()->first();
+        $order = Order::query()->where(['id' => $params['account']['order_id'], 'status' => Order::STATE_WAITING_PAY])->get()->first();
         $isExists = Transaction::query()->where(['paycom_transaction_id' => $params['id']])->exists();
         if (!$isExists) {
             //Yo'q bo'lsa\
@@ -132,16 +136,70 @@ class PaymeController extends Controller
                 "result" => [
                     "create_time" => $create_time,
                     "transaction" => (string)$transaction["id"],
-                    "state"       => $transaction["state"],
-                    "receivers"   => null,
+                    "state" => $transaction["state"],
+                    "receivers" => null,
                 ]
             ]);
 
         } else {
             //Mavjud bo'lsa
         }
+    }
 
+    private function PerformTransaction(array $params)
+    {
+        $transaction = Transaction::query()->where(['paycom_transaction_id' => $params['id']]);
+        if (!$transaction->exists()) {
+            return $this->Error(-31003, [
+                'en' => "Transaction not found",
+                "ru" => "Transaction not found",
+                "uz" => "Transaction not found",
+            ]);
+        }
+        $transaction = $transaction->first()->toArray();
+        switch ($transaction['state']) {
+            case Transaction::STATE_CREATED:
+                $params = ['order_id' => $transaction['order_id']];
+                Order::query()->where(['id' => $transaction['order_id']])->get()->first()->update(['state' => Transaction::STATE_COMPLETED]);
+                // todo: Mark transaction as completed
+                $perform_time = Transaction::timestamp(true);
+                Transaction::query()->with(['paycom_transaction_id' => $params['id']])
+                    ->get()
+                    ->first()
+                    ->update([
+                        'state' => Transaction::STATE_COMPLETED,
+                        'perform_time' => Transaction::timestamp2datetime($perform_time),
+                    ]);
 
+                return json_encode([
+                    "result" => [
+                        'transaction' => $params['id'],
+                        'perform_time' => $perform_time,
+                        'state' => Transaction::STATE_COMPLETED,
+                    ]
+                ]);
+                break;
+            case Transaction::STATE_COMPLETED:
+                return json_encode([
+                    "result" => [
+                        'transaction' => $params['id'],
+                        'state' => Transaction::STATE_COMPLETED,
+                        'perform_time' => Transaction::datetime2timestamp($transaction['perform_time']),
+                    ]
+                ]);
+                break;
+            default:
+                //  $this->response->error(
+                //                    PaycomException::ERROR_COULD_NOT_PERFORM,
+                //                    'Could not perform this operation.'
+                //                );
+                //                break;
+                return $this->Error(-31001, [
+                    'en' => "Unknown state",
+                    'ru' => "Unknown state",
+                    "uz" => "Unknown state",
+                ]);
+        }
     }
 
 }
