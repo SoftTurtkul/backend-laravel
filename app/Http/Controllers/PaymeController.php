@@ -38,6 +38,25 @@ class PaymeController extends Controller
             case 'CreateTransaction':
                 return $this->CreateTransaction($data['params']);
                 break;
+            case 'CheckTransaction':
+                if(Transaction::query()->where(['paycom_transaction_id'=>$data['params']['id']])->exists()){
+                    $transaction = Transaction::query()->where(['paycom_transaction_id'=>$data['params']['id']])->first()->toArray();
+                    return json_encode([
+                        "result" => [
+                            'create_time'=>$transaction['create_time'],
+                            'perform_time'=>$transaction['perform_time'],
+                            'cancel_time'=>$transaction['cancel_time']??0,
+                            'transaction'=>$transaction['id'],
+                            'status'=>$transaction['status'],
+                            'reason'=>$transaction['reason'],
+                        ]
+                    ]);
+                }
+                return $this->Error(-31003, [
+                    "ru" => "Not Allowed",
+                    "en" => "Not Allowed",
+                    "uz" => "Not Allowed",
+                ])
         }
     }
 
