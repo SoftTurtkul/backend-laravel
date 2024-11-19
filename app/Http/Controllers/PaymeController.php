@@ -81,13 +81,6 @@ class PaymeController extends Controller
                 "uz" => "Order price mismatch",
             ]);
         }
-        if (Transaction::query()->where(['order_id' => $order->id])->whereIn('state', [Transaction::STATE_CREATED, Transaction::STATE_COMPLETED])->exists()) {
-            return $this->Error(-31050, [
-                'en' => "Transaction already exists",
-                "ru" => "Transaction already exists",
-                "uz" => "Transaction already exists",
-            ]);
-        }
         return true;
     }
 
@@ -142,7 +135,37 @@ class PaymeController extends Controller
             ]);
 
         } else {
-            //Mavjud bo'lsa
+            $transaction = Transaction::query()->where(['paycom_transaction_id' => $params['id']])->first()->toArray();
+            if ($transaction['state'] != Transaction::STATE_CREATED) {
+                return $this->Error(-31008, [
+                    'en' => 'Transaction already created',
+                    'ru' => 'Transaction already created',
+                    'uz' => 'Transaction already created',
+                ]);
+            }
+            //        return $this->state == self::STATE_CREATED && abs(Format::datetime2timestamp($this->create_time) - Format::timestamp(true)) > self::TIMEOUT;
+
+            if ($transaction['state'] == Transaction::STATE_CREATED
+                && abs(Transaction::datetime2timestamp($transaction['create_time']) - Transaction::timestamp(true)) > Transaction::TIMEOUT
+            ) {
+                Transaction::query()->where(['paycom_transaction_id' => $params['id']])->update([
+                    'state' => Transaction::STATE_CANCELLED,
+                    'reason' => Transaction::REASON_CANCELLED_BY_TIMEOUT
+                ]);
+                return $this->Error(-31008, [
+                    'en' => 'Transaction cancelled by timeout',
+                    'ru' => 'Transaction cancelled by timeout',
+                    'uz' => 'Transaction cancelled by timeout',
+                ]);
+            }
+            return json_encode([
+                "result" => [
+                    "create_time" => Transaction::datetime2timestamp($transaction['create_time']),
+                    "transaction" => (string)$transaction["id"],
+                    "state" => $transaction["state"],
+                    "receivers" => null,
+                ]
+            ]);
         }
     }
 
