@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Transaction;
 
 class PaymeController extends Controller
 {
@@ -74,6 +75,41 @@ class PaymeController extends Controller
         if (($perform = $this->CheckPerformTransaction($params)) !== true) {
             return $perform;
         }
+        $order = Order::query()->where(['id' => $params['account']['order_id'], 'status' => 0])->get()->first();
+        $isExists = Transaction::query()->where(['paycom_transaction_id' => $params['id']])->exists();
+        if (!$isExists) {
+            //Yo'q bo'lsa\
+            if (Transaction::timestamp2milliseconds(1 * $params['time']) - Transaction::timestamp(true) >= Transaction::TIMEOUT) {
+                return $this->Error(-31050, [
+                    'С даты создания транзакции прошло ' . Transaction::TIMEOUT . 'мс',
+                    'Tranzaksiya yaratilgan sanadan ' . Transaction::TIMEOUT . 'ms o`tgan',
+                    'Since create time of the transaction passed ' . Transaction::TIMEOUT . 'ms'
+                ]);
+            }
+            $create_time = Transaction::totimestamp(true);
+            $transaction = new Transaction();
+            $transaction->paycom_transaction_id = $params['id'];
+            $transaction->paycom_time = $params['time'];
+            $transaction->paycom_time_datetime = Transaction::timestamp2datetime($params['time']);
+            $transaction->create_time = Transaction::timestamp2datetime($create_time);
+            $transaction->state = Transaction::STATE_CREATED;
+            $transaction->amount = $params['amount'];
+            $transaction->order_id = $params['account']['order_id'];
+            $transaction->save(); // after save $transaction->id will be populated with the newly created transaction's id.
+
+            // send response
+            return json_encode([
+                'create_time' => $create_time,
+                'transaction' => $transaction->id,
+                'state' => $transaction->state,
+                'receivers' => null,
+            ]);
+
+        } else {
+            //Mavjud bo'lsa
+        }
+
+
     }
 
 }
