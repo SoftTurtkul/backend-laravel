@@ -153,4 +153,18 @@ class Transaction extends Model
 
         return floor(1 * $timestamp / 1000);
     }
+
+    /**
+     * Converts date time string to timestamp value.
+     * @param string $datetime date time string.
+     * @return int timestamp as milliseconds.
+     */
+    public static function datetime2timestamp($datetime)
+    {
+        if ($datetime) {
+            return 1000 * strtotime($datetime);
+        }
+
+        return $datetime;
+    }
 }

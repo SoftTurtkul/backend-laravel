@@ -43,10 +43,10 @@ class PaymeController extends Controller
                     $transaction = Transaction::query()->where(['paycom_transaction_id'=>$data['params']['id']])->first()->toArray();
                     return json_encode([
                         "result" => [
-                            'create_time'=>$transaction['create_time'],
-                            'perform_time'=>$transaction['perform_time'],
+                            'create_time'=>Transaction::datetime2timestamp($transaction['create_time']),
+                            'perform_time'=>Transaction::datetime2timestamp($transaction['perform_time']),
                             'cancel_time'=>$transaction['cancel_time']??0,
-                            'transaction'=>$transaction['id'],
+                            'transaction'=>(string)$transaction['id'],
                             'state'=>$transaction['state'],
                             'reason'=>$transaction['reason'],
                         ]
