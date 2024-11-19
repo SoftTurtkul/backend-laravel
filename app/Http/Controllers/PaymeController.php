@@ -46,7 +46,7 @@ class PaymeController extends Controller
                             'create_time' => Transaction::datetime2timestamp($transaction['create_time']),
                             'perform_time' => Transaction::datetime2timestamp($transaction['perform_time'])??0,
                             'cancel_time' => $transaction['cancel_time'] ?? 0,
-                            'transaction' => (string)$transaction['id'],
+                            'transaction' => (string)$transaction['paycom_transaction_id'],
                             'state' => $transaction['state'],
                             'reason' => $transaction['reason'],
                         ]
@@ -137,7 +137,7 @@ class PaymeController extends Controller
 
                 "result" => [
                     "create_time" => $create_time,
-                    "transaction" => (string)$transaction["id"],
+                    "transaction" => (string)$transaction["paycom_transaction_id"],
                     "state" => $transaction["state"],
                     "receivers" => null,
                 ]
@@ -170,7 +170,7 @@ class PaymeController extends Controller
             return json_encode([
                 "result" => [
                     "create_time" => Transaction::datetime2timestamp($transaction['create_time']),
-                    "transaction" => (string)$transaction["id"],
+                    "transaction" => (string)$transaction["paycom_transaction_id"],
                     "state" => $transaction["state"],
                     "receivers" => null,
                 ]
