@@ -35,7 +35,6 @@ class PaymeController extends Controller
                         ->toArray();
                     $items=[];
                     foreach ($orderItems as $orderItem) {
-                        dd($orderItem,Product::query()->where(['id'=>$orderItem['product_id']])->get()->toArray());
                         $items[]=[
                             'discount'=>0,
                             'title'=>Product::query()->find(['id'=>$orderItem['product_id']])->get('name'),
