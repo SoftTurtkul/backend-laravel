@@ -38,7 +38,7 @@ class PaymeController extends Controller
                         $items[]=[
                             'discount'=>0,
                             'title'=>Product::query()->where(['id'=>$orderItem['product_id']])->get('name')->first()->name,
-                            'price'=>Product::query()->where(['id'=>$orderItem['product_id']])->get('price')->first()->price,
+                            'price'=>Product::query()->where(['id'=>$orderItem['product_id']])->get('price')->first()->price*100,
                             'count'=>$orderItem['quantity'],
                             'code'=>'10202001002000000',
                             'vat_percent'=>'12',
