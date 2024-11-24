@@ -9,12 +9,15 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Partner;
 
-class OrderController extends Controller {
-    public function index(Partner $partner) {
+class OrderController extends Controller
+{
+    public function index(Partner $partner)
+    {
         return $this->success(['orders' => $partner->orders]);
     }
 
-    public function getOrdersByStatus(Request $request, $customer = null) {
+    public function getOrdersByStatus(Request $request, $customer = null)
+    {
         if ($customer != null) return $this->success([
             'orders' => Order::query()->with('client')
                 ->where('customer_id', $customer)
@@ -29,14 +32,16 @@ class OrderController extends Controller {
         ]);
     }
 
-    public function getDeliveryOrders($customer) {
+    public function getDeliveryOrders($customer)
+    {
         return $this->success([
             'orders' => Order::query()->where('customer_id', $customer)
                 ->whereIn('status', [0, 1, 2, 3])->get()
         ]);
     }
 
-    public function getOrderItems($order) {
+    public function getOrderItems($order)
+    {
         return $this->success([
             'items' => OrderItem::query()
                 ->whereHas('product')
@@ -45,7 +50,8 @@ class OrderController extends Controller {
         ]);
     }
 
-    public function store(OrderRequest $request) {
+    public function store(OrderRequest $request)
+    {
         $data = $request->validated();
         $order = Order::query()->create($data);
         foreach ($data['order_items'] as $item) {
@@ -56,14 +62,19 @@ class OrderController extends Controller {
                 'price' => $item['price']
             ]);
         }
+        return $this->success([
+            'order' => $order,
+            'payme' => "https://checkout.payme.com/" . base64_encode("m=6708c357e64d929b0e41a59b;ac.order_id=" . $order->id . ";a=" . ($data['total+price'] * 100))
+        ]);
+    }
+
+    public function show(Order $order)
+    {
         return $this->success(['order' => $order]);
     }
 
-    public function show(Order $order) {
-        return $this->success(['order' => $order]);
-    }
-
-    public function changeOrderStatus(Request $request, Order $order) {
+    public function changeOrderStatus(Request $request, Order $order)
+    {
         if ($request->status) {
             $order->update(['status' => $request->status]);
             return $this->success($order);
@@ -72,7 +83,8 @@ class OrderController extends Controller {
         return $this->fail([], 'Invalid status');
     }
 
-    public function changeItemStatus(Request $request, OrderItem $item) {
+    public function changeItemStatus(Request $request, OrderItem $item)
+    {
         if ($request->status) {
             $item->update(['status' => $request->status]);
             return $this->success($item);
