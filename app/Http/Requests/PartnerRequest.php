@@ -35,7 +35,7 @@ class PartnerRequest extends BaseRequest
             'img' => '',
             'longitude' => '',
             'latitude' => '',
-            'open' => 'nullable|boolean|default:false',
+            'open' => 'nullable|boolean',
         ];
     }
 }
