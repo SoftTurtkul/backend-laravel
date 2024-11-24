@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Product;
 use App\Models\Transaction;
 
 class PaymeController extends Controller
@@ -27,9 +29,29 @@ class PaymeController extends Controller
             case 'CheckPerformTransaction':
                 $perform = $this->CheckPerformTransaction($data['params']);
                 if ($perform === true) {
+                    $orderItems=OrderItem::query()
+                        ->find(['order_id'=>$data['params']['account']['order_id']])
+                        ->all()
+                        ->toArray();
+                    $items=[];
+                    foreach ($orderItems as $orderItem) {
+                        $items[]=[
+                            'discount'=>0,
+                            'title'=>Product::query()->find(['id'=>$orderItem['product_id']])->get('name'),
+                            'price'=>Product::query()->find(['id'=>$orderItem['product_id']])->get('price'),
+                            'count'=>$orderItems['quantity'],
+                            'code'=>'10202001002000000',
+                            'vat_percent'=>'12',
+                            'package_code'=>'1372873'
+                        ];
+                    }
                     return json_encode([
                         "result" => [
-                            "allow" => true
+                            "allow" => true,
+                            'detail'=>[
+                                'receipt_type'=>1,
+                                'items'=>$items
+                            ]
                         ]
                     ]);
                 }
