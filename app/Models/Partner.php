@@ -14,7 +14,7 @@ class Partner extends Model {
     use HasFactory, HasApiTokens;
 
     protected $fillable = [
-        'name', 'username', 'password', 'start_time', 'end_time', 'address', 'phone', 'img', 'longitude', 'latitude'
+        'name', 'username', 'password', 'start_time', 'end_time', 'address', 'phone', 'img', 'longitude', 'latitude','open'
     ];
 
     protected $hidden = [
