@@ -37,8 +37,8 @@ class PaymeController extends Controller
                     foreach ($orderItems as $orderItem) {
                         $items[]=[
                             'discount'=>0,
-                            'title'=>Product::query()->where(['id'=>$orderItem['product_id']])->get('name')['name'],
-                            'price'=>Product::query()->where(['id'=>$orderItem['product_id']])->get('price')['price'],
+                            'title'=>Product::query()->where(['id'=>$orderItem['product_id']])->get('name')->first()->name,
+                            'price'=>Product::query()->where(['id'=>$orderItem['product_id']])->get('price')->first()->price,
                             'count'=>$orderItem['quantity'],
                             'code'=>'10202001002000000',
                             'vat_percent'=>'12',
