@@ -30,7 +30,7 @@ class PaymeController extends Controller
                 $perform = $this->CheckPerformTransaction($data['params']);
                 if ($perform === true) {
                     $orderItems=OrderItem::query()
-                        ->find(['order_id'=>$data['params']['account']['order_id']])
+                        ->where(['order_id'=>$data['params']['account']['order_id']])
                         ->toArray();
                     $items=[];
                     foreach ($orderItems as $orderItem) {
