@@ -31,7 +31,6 @@ class PaymeController extends Controller
                 if ($perform === true) {
                     $orderItems=OrderItem::query()
                         ->find(['order_id'=>$data['params']['account']['order_id']])
-                        ->all()
                         ->toArray();
                     $items=[];
                     foreach ($orderItems as $orderItem) {
