@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\PaymeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
@@ -37,6 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::resource('partners', PartnerController::class);
         Route::resource('customers', CustomerController::class);
         Route::resource('clients', ClientController::class);
+        Route::resource('delivery', DeliveryController::class);
         Route::post('drivers/{driver}/activate', [DriverController::class, 'activate']);
     });
 
@@ -54,6 +56,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/{driver}', [DriverController::class, 'history']);
     });
 
+    Route::prefix("/delivery")->group(function () {
+        Route::post('/location', [DeliveryController::class, 'updateLocation']);
+        Route::get('/get-new-orders', [DeliveryController::class, 'getNewOrders']);
+        Route::post('/{order}/change-order-status', [DeliveryController::class, 'changeOrderStatus']);
+    });
     Route::prefix('/partners')->group(function () {
         Route::resource('categories', CategoryController::class);
         Route::resource('products', ProductController::class);
@@ -102,6 +109,8 @@ Route::post('/payme', [PaymeController::class, 'index']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/driver/login', [AuthController::class, 'driver']);
 Route::post('/driver/verify', [AuthController::class, 'verify']);
+Route::post('/delivery/login', [AuthController::class, 'delivery']);
+Route::post('/delivery/verify', [AuthController::class, 'verifyDelivery']);
 Route::post('/driver/register', [DriverController::class, 'store']);
 Route::post('/drivers/{driver}/car', [CarController::class, 'store']);
 Route::post('/partner/login', [AuthController::class, 'partner']);

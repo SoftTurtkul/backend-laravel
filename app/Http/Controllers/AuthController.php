@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\Delivery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\DriverLoginRequest;
@@ -56,12 +57,43 @@ class AuthController extends Controller
 
         return $this->fail([]);
     }
+    //Delivery Login
+    public function delivery(DriverLoginRequest $request){
+        $delivery = Delivery::query()->where('phone',
+            $request->get('phone'))->first();
+        if($delivery){
+            $delivery->password = rand(1000, 9999);
+            $delivery->update();
+            SendMessageJob::dispatch($delivery, $request->get('token'));
+            return $this->success([
+                'code'=>$delivery->password
+            ]);
+        }
+    }
 
     // Driver verify
     public function verify(VerifyRequest $request)
     {
         $data = $request->validated();
         $driver = Driver::query()->where('phone', $data['phone'])
+            ->where('password', $data['code'])->firstOrFail();
+
+        if ($driver) {
+            $driver->password = '';
+            $driver->update();
+            return $this->success([
+                'id' => $driver->id,
+                'token' => $driver->createToken('auth_token')->plainTextToken
+            ]);
+        }
+
+        return $this->fail([]);
+    }
+
+    public function verifyDelivery(VerifyRequest $request)
+    {
+        $data = $request->validated();
+        $driver = Delivery::query()->where('phone', $data['phone'])
             ->where('password', $data['code'])->firstOrFail();
 
         if ($driver) {

@@ -22,7 +22,8 @@ class Order extends Model {
 
     protected $fillable = [
         'customer_id', 'driver_id', 'partner_id', 'total_price',
-        'item_count', 'address', 'longitude', 'latitude', 'status'
+        'item_count', 'address', 'longitude', 'latitude', 'status',
+        'delivery_price','payment_type'
     ];
 
     public function customer() {

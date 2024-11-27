@@ -29,7 +29,9 @@ class OrderRequest extends BaseRequest
             'address' => '',
             'longitude' => 'required',
             'latitude' => 'required',
-            'order_items' => ''
+            'order_items' => '',
+            'payment_type' => 'required',
+            'delivery_price' => 'required',
         ];
     }
 }
