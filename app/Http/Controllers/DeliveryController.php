@@ -124,26 +124,37 @@ class DeliveryController extends Controller
                 ->get()
         ]);
     }
-    public function changeOrderStatus(){
-       $status=\request()->post('status');
-       if($status==3){
-           $orders = Order::query()
-               ->where(['driver_id' => 0, 'status' => 1,'id'=>\request()->route('order')])
-               ->exists();
-       }elseif($status==31){
-           $orders = Order::query()
-               ->where(['driver_id' => \auth('sanctum')->user()->id,'status'=>2,'id'=>\request()->route('order')])
-               ->exists();
-       }elseif($status==4){
-           $orders = Order::query()
-               ->where(['driver_id' => \auth('sanctum')->user()->id,'status'=>31,'id'=>\request()->route('order')])
-               ->exists();
-       }
-        if($orders){
-            $order = Order::query()->where(['id'=>\request()->route('order')])->first();
+
+    public function changeOrderStatus()
+    {
+        $status = \request()->post('status');
+        if ($status == 3) {
+            $orders = Order::query()
+                ->where(['driver_id' => 0, 'status' => 1, 'id' => \request()->route('order')])
+                ->exists();
+        } elseif ($status == 31) {
+            $orders = Order::query()
+                ->where(['driver_id' => \auth('sanctum')->user()->id, 'status' => 2, 'id' => \request()->route('order')])
+                ->exists();
+        } elseif ($status == 4) {
+            $orders = Order::query()
+                ->where(['driver_id' => \auth('sanctum')->user()->id, 'status' => 31, 'id' => \request()->route('order')])
+                ->exists();
+        }
+        if ($orders) {
+            $order = Order::query()->where(['id' => \request()->route('order')])->first();
             $order->status = \request()->post('status');
             $order->driver_id = \auth('sanctum')->user()->id;
             $order->update();
+            if ($status == 4 && $order->payment_type==0) {
+                $delivery_price = Order::query()
+                    ->where(['id' => \request()->route('order')])->first()->delivery_price ?? 0;
+                $delivery = Delivery::query()
+                    ->where(['id' => \auth('sanctum')->user()->id])
+                    ->first();
+                $delivery->sum += $delivery_price;
+                $delivery->update();
+            }
             return $this->success([
             ]);
         }

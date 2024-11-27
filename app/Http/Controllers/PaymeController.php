@@ -50,6 +50,10 @@ class PaymeController extends Controller
                             "allow" => true,
                             'detail'=>[
                                 'receipt_type'=>1,
+                                'shipping'=>[
+                                  'title'=>'Manzilgacha',
+                                  'price'=>@Order::query()->where(['id'=>$data['params']['account']['order_id']])->first()->delivery_price??0,
+                                ],
                                 'items'=>$items
                             ]
                         ]
