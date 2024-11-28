@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\MessageService;
 use App\Models\Client;
 use App\Models\Delivery;
 use Illuminate\Http\Request;
@@ -136,7 +137,10 @@ class AuthController extends Controller
         }
         $customer->update();
         $customer->refresh();
-        dispatch(new SendMessageJob($customer, $request->get('token')));
+        $sms=new MessageService();
+        $sms->sendMessage($customer->phone,
+          "<#> Sizning tasdiqlash kodingiz: $customer->password.\nDarrov"
+        );
         return $this->success([
             'code' => $customer->password
         ]);
