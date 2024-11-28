@@ -135,6 +135,7 @@ class AuthController extends Controller
             $customer->password = rand(1000, 9999);
         }
         $customer->update();
+        $customer->refresh();
         dispatch(new SendMessageJob($customer, $request->get('token')));
         return $this->success([
             'code' => $customer->password
