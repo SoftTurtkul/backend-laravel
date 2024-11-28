@@ -173,9 +173,10 @@ class AuthController extends Controller
         $client->update();
         $client->refresh();
         $sms=new MessageService();
-        $sms->sendMessage($client->phone,
+        $res=$sms->sendMessage($client->phone,
             "<#> Sizning tasdiqlash kodingiz: $client->password.\nDarrov"
         );
+        dd($res);
         return $this->success([
             'code' => $client->password
         ]);
