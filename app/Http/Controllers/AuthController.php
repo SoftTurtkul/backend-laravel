@@ -171,8 +171,11 @@ class AuthController extends Controller
 
         $client->password = rand(1000, 9999);
         $client->update();
-
-        dispatch(new SendMessageJob($client, $request->get('token')));
+        $client->refresh();
+        $sms=new MessageService();
+        $sms->sendMessage($client->phone,
+            "<#> Sizning tasdiqlash kodingiz: $client->password.\nDarrov"
+        );
         return $this->success([
             'code' => $client->password
         ]);
