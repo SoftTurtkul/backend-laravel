@@ -176,7 +176,7 @@ class AuthController extends Controller
         $res=$sms->sendMessage($client->phone,
             "<#> Sizning tasdiqlash kodingiz: $client->password.\nDarrov"
         );
-        dd($res);
+        dd($res->body());
         return $this->success([
             'code' => $client->password
         ]);
