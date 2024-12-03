@@ -60,6 +60,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/location', [DeliveryController::class, 'updateLocation']);
         Route::get('/get-new-orders', [DeliveryController::class, 'getNewOrders']);
         Route::post('/{order}/change-order-status', [DeliveryController::class, 'changeOrderStatus']);
+        Route::get('/me', [DeliveryController::class, 'me']);
     });
     Route::prefix('/partners')->group(function () {
         Route::resource('categories', CategoryController::class);

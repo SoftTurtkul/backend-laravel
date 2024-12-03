@@ -163,6 +163,16 @@ class DeliveryController extends Controller
         ]);
 
     }
+    public function me(){
+        $id=\auth('sanctum')->user()->id;
+        return $this->success(
+            Delivery::query()
+            ->where(['id'=>$id])
+            ->first()
+            ->toArray()
+        );
+
+    }
 //    public function offer() {
 //        return Storage::get(public_path('taxi.pdf'));
 //    }
