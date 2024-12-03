@@ -169,9 +169,16 @@ class DeliveryController extends Controller
             Delivery::query()
             ->where(['id'=>$id])
             ->first()
-            ->toArray()
         );
 
+    }
+
+    public function current(){
+        $order=Order::query()
+            ->where(['driver_id'=>\auth('sanctum')->user()->id])
+            ->whereIn('status',[2,3,31])
+            ->first();
+        return $this->success($order);
     }
 //    public function offer() {
 //        return Storage::get(public_path('taxi.pdf'));

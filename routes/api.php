@@ -61,6 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/get-new-orders', [DeliveryController::class, 'getNewOrders']);
         Route::post('/{order}/change-order-status', [DeliveryController::class, 'changeOrderStatus']);
         Route::get('/me', [DeliveryController::class, 'me']);
+        Route::get('/current', [DeliveryController::class, 'current']);
     });
     Route::prefix('/partners')->group(function () {
         Route::resource('categories', CategoryController::class);
