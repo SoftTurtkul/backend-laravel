@@ -121,6 +121,7 @@ class DeliveryController extends Controller
         return $this->success([
             'orders' => Order::query()
                 ->where(['driver_id' => 0, 'status' => 1])
+                ->with('partner')
                 ->orderBy('updated_at', 'desc')
                 ->get()
         ]);
