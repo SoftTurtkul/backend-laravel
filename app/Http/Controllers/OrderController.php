@@ -14,7 +14,10 @@ class OrderController extends Controller
 {
     public function index(Partner $partner)
     {
-        return $this->success(['orders' => $partner->orders]);
+        if ($partner instanceof Partner) {
+            return $this->success(['orders' => $partner->orders]);
+        }
+        return $this->success(['orders' => Order::all()]);
     }
 
     public function getOrdersByStatus(Request $request, $customer = null)
