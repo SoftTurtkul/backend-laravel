@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\History;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\OrderRequest;
@@ -76,6 +77,10 @@ class OrderController extends Controller
     public function changeOrderStatus(Request $request, Order $order)
     {
         if ($request->status) {
+            $history=new History();
+            $history->order_id=$order->id;
+            $history->status=$request->status;
+            $history->save();
             $order->update(['status' => $request->status]);
             return $this->success($order);
         }

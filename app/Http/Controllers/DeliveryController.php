@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\DeliveryRequest;
 use App\Http\Services\DeliveryService;
 use App\Models\Delivery;
+use App\Models\History;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Requests\DriverOrderRequest;
@@ -155,6 +156,11 @@ class DeliveryController extends Controller
                 $delivery->sum += $delivery_price;
                 $delivery->update();
             }
+            $history=new History();
+            $history->driver_id=\auth('sanctum')->user()->id;
+            $history->order_id=$order->id;
+            $history->status=$status;
+            $history->save();
             return $this->success([
             ]);
         }
