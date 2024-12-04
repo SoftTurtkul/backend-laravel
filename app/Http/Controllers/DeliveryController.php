@@ -191,6 +191,7 @@ class DeliveryController extends Controller
             ->with('customer')
             ->with('partner')
             ->with('items')
+            ->with('items.product')
             ->where(['driver_id' => \auth('sanctum')->user()->id])
             ->whereIn('status', [2, 3, 31])
             ->first();
