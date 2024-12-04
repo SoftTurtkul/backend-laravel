@@ -33,6 +33,9 @@ class Order extends Model {
     public function partner() {
         return $this->belongsTo(Partner::class);
     }
+    public  function items() {
+        return $this->hasMany(OrderItem::class);
+    }
 
 //    public function getClientAttribute() {
 //        return $this->customer;
