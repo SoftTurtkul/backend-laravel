@@ -38,6 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::resource('partners', PartnerController::class);
         Route::resource('customers', CustomerController::class);
         Route::resource('clients', ClientController::class);
+        Route::resource('orders', OrderController::class);
         Route::resource('delivery', DeliveryController::class);
         Route::post('drivers/{driver}/activate', [DriverController::class, 'activate']);
     });
