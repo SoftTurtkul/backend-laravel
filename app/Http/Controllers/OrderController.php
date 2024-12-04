@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\History;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\OrderRequest;
 use App\Models\Order;
@@ -14,10 +15,11 @@ class OrderController extends Controller
 {
     public function index(Partner $partner)
     {
-        if ($partner instanceof Partner) {
-            return $this->success(['orders' => $partner->orders]);
+        if (\request()->routeIs('orders.index')) {
+            return $this->success(['orders' => Order::all()]);
         }
-        return $this->success(['orders' => Order::all()]);
+        return $this->success(['orders' => $partner->orders]);
+
     }
 
     public function getOrdersByStatus(Request $request, $customer = null)
@@ -68,7 +70,7 @@ class OrderController extends Controller
         }
         return $this->success([
             'order' => $order,
-            'payme' => $data['payment_type']==0?"https://checkout.payme.uz/" . base64_encode("m=6708c357e64d929b0e41a59b;ac.order_id=" . $order->id . ";a=" . ($data['total_price'] * 100)):''
+            'payme' => $data['payment_type'] == 0 ? "https://checkout.payme.uz/" . base64_encode("m=6708c357e64d929b0e41a59b;ac.order_id=" . $order->id . ";a=" . ($data['total_price'] * 100)) : ''
         ]);
     }
 
@@ -80,9 +82,9 @@ class OrderController extends Controller
     public function changeOrderStatus(Request $request, Order $order)
     {
         if ($request->status) {
-            $history=new History();
-            $history->order_id=$order->id;
-            $history->status=$request->status;
+            $history = new History();
+            $history->order_id = $order->id;
+            $history->status = $request->status;
             $history->save();
             $order->update(['status' => $request->status]);
             return $this->success($order);

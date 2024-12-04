@@ -67,7 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('/partners')->group(function () {
         Route::resource('categories', CategoryController::class);
         Route::resource('products', ProductController::class);
-        Route::get('/{partner}/orders', [OrderController::class, 'index']);
+        Route::get('/{partner}/orders', [OrderController::class, 'index'])->name('partner.orders');
         Route::get('/{order}/order-items', [OrderController::class, 'getOrderItems']);
         Route::post('/{order}/change-order-status', [OrderController::class, 'changeOrderStatus']);
         Route::post('/{item}/change-item-status', [OrderController::class, 'changeItemStatus']);
