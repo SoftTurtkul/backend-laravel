@@ -147,7 +147,7 @@ class DeliveryController extends Controller
             $order->status = \request()->post('status');
             $order->driver_id = \auth('sanctum')->user()->id;
             $order->update();
-            if ($status == 4 && $order->payment_type==0) {
+            if ($status == 4 && $order->payment_type == 0) {
                 $delivery_price = Order::query()
                     ->where(['id' => \request()->route('order')])->first()->delivery_price ?? 0;
                 $delivery = Delivery::query()
@@ -156,10 +156,10 @@ class DeliveryController extends Controller
                 $delivery->sum += $delivery_price;
                 $delivery->update();
             }
-            $history=new History();
-            $history->driver_id=\auth('sanctum')->user()->id;
-            $history->order_id=$order->id;
-            $history->status=$status;
+            $history = new History();
+            $history->driver_id = \auth('sanctum')->user()->id;
+            $history->order_id = $order->id;
+            $history->status = $status;
             $history->save();
             return $this->success([
             ]);
@@ -169,22 +169,28 @@ class DeliveryController extends Controller
         ]);
 
     }
-    public function me(){
-        $id=\auth('sanctum')->user()->id;
+
+    public function me()
+    {
+        $id = \auth('sanctum')->user()->id;
+        $ordersCount=History::query()->where('driver_id', $id)->whereDay('created_at', '=', now()->day)->where('status',Order::STATE_FINISHED)->orderByDesc('created_at')->count();
         return $this->success(
-            Delivery::query()
-            ->where(['id'=>$id])
-            ->first()
+            ['profile' => Delivery::query()
+                ->where(['id' => $id])
+                ->first(),
+                'ordersCount' => $ordersCount
+            ]
         );
 
     }
 
-    public function current(){
-        $order=Order::query()
+    public function current()
+    {
+        $order = Order::query()
             ->with('customer')
             ->with('partner')
-            ->where(['driver_id'=>\auth('sanctum')->user()->id])
-            ->whereIn('status',[2,3,31])
+            ->where(['driver_id' => \auth('sanctum')->user()->id])
+            ->whereIn('status', [2, 3, 31])
             ->first();
         return $this->success($order);
     }

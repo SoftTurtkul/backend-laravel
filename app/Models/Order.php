@@ -18,6 +18,7 @@ class Order extends Model {
 
     /** Order is cancelled. */
     const STATE_CANCELLED = -2;
+    const STATE_FINISHED=4;
 
 
     protected $fillable = [
