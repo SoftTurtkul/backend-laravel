@@ -29,6 +29,9 @@ class Order extends Model {
     public function customer() {
         return $this->belongsTo(Customer::class);
     }
+    public function partner() {
+        return $this->belongsTo(Partner::class);
+    }
 
 //    public function getClientAttribute() {
 //        return $this->customer;

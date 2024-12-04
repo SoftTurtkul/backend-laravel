@@ -175,6 +175,8 @@ class DeliveryController extends Controller
 
     public function current(){
         $order=Order::query()
+            ->with('customer')
+            ->with('partner')
             ->where(['driver_id'=>\auth('sanctum')->user()->id])
             ->whereIn('status',[2,3,31])
             ->first();
