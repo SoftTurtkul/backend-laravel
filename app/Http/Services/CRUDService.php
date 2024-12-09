@@ -37,6 +37,9 @@ abstract class CRUDService implements ICRUDService {
 
     public function update(Model $model, $data) {
         try {
+            if(array_key_exists('password', $data)) {
+                $data['password'] = bcrypt($data['password']);
+            }
             $model->update($data);
         } catch (QueryException $e) {
             return $this->fail($e);
