@@ -52,7 +52,11 @@ class AuthController extends Controller
         if ($driver) {
             $driver->password = rand(1000, 9999);
             $driver->update();
-            SendMessageJob::dispatch($driver, $request->get('token'));
+            $driver->refresh();
+            $sms=new MessageService();
+            $sms->sendMessage($driver->phone,
+                "<#> Sizning tasdiqlash kodingiz: $driver->password.\nDarrov"
+            );
             return $this->success([]);
         }
 
@@ -65,9 +69,13 @@ class AuthController extends Controller
         if($delivery){
             $delivery->password = rand(1000, 9999);
             $delivery->update();
-            SendMessageJob::dispatch($delivery, $request->get('token'));
+            $delivery->refresh();
+            $sms=new MessageService();
+            $sms->sendMessage($delivery->phone,
+                "<#> Sizning tasdiqlash kodingiz: $delivery->password.\nDarrov"
+            );
             return $this->success([
-                'code'=>$delivery->password
+//                'code'=>$delivery->password
             ]);
         }else{
             return $this->fail([]);
@@ -144,7 +152,7 @@ class AuthController extends Controller
           "<#> Sizning tasdiqlash kodingiz: $customer->password.\nDarrov"
         );
         return $this->success([
-            'code' => $customer->password
+//            'code' => $customer->password
         ]);
     }
 
@@ -179,7 +187,7 @@ class AuthController extends Controller
             "<#> Sizning tasdiqlash kodingiz: $client->password.\nDarrov"
         );
         return $this->success([
-            'code' => $client->password
+//            'code' => $client->password
         ]);
     }
 
