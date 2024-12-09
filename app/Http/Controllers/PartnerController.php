@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PartnerUpdateRequest;
 use App\Http\Services\PartnerService;
 use App\Http\Requests\PartnerRequest;
 use App\Models\Partner;
@@ -29,7 +30,7 @@ class PartnerController extends Controller {
         return $this->success(['partner' => $partner]);
     }
 
-    public function update(PartnerRequest $request, Partner $partner) {
+    public function update(PartnerUpdateRequest $request, Partner $partner) {
         return $this->service->update($partner, $request->validated());
     }
 
