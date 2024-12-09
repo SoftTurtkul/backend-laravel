@@ -18,7 +18,7 @@ class DeliveryService extends CRUDService {
     }
 
     public function get() {
-        return $this->success(Driver::query()->get());
+        return $this->success(Delivery::query()->get());
     }
 
 //    public function addSum($request, $driver) {
