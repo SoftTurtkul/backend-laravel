@@ -69,6 +69,8 @@ class AuthController extends Controller
             return $this->success([
                 'code'=>$delivery->password
             ]);
+        }else{
+            return $this->fail([]);
         }
     }
 

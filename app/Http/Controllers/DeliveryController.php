@@ -122,6 +122,7 @@ class DeliveryController extends Controller
             'orders' => Order::query()
                 ->where(['driver_id' => 0, 'status' => 1])
                 ->with('partner')
+                ->with('customer')
                 ->orderBy('updated_at', 'desc')
                 ->get()
         ]);

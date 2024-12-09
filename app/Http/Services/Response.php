@@ -16,6 +16,6 @@ trait Response {
             'success' => false,
             'errors' => $errors,
             'msg' => $msg
-        ]);
+        ])->setStatusCode(400);
     }
 }
