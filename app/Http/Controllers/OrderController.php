@@ -52,6 +52,9 @@ class OrderController extends Controller
             'items' => OrderItem::query()
                 ->whereHas('product')
                 ->with('product')
+                ->with('order')
+                ->with('order.customer')
+                ->with('order.partner')
                 ->where('order_id', $order)->get()
         ]);
     }
