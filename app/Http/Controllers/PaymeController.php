@@ -9,7 +9,7 @@ use App\Models\Transaction;
 
 class PaymeController extends Controller
 {
-    const test_token = "4aa0n805So%uvv0r@jmCjexE%?is6NtJKtGx";
+    const test_token = "Drb4rksirx6NhWqJa@R%YeSj3jC&aTRKUbQK";
     const user = "Paycom";
 
     public function index()
@@ -29,32 +29,36 @@ class PaymeController extends Controller
             case 'CheckPerformTransaction':
                 $perform = $this->CheckPerformTransaction($data['params']);
                 if ($perform === true) {
-                    $orderItems=OrderItem::query()
-                        ->where(['order_id'=>$data['params']['account']['order_id']])
+                    $orderItems = OrderItem::query()
+                        ->where(['order_id' => $data['params']['account']['order_id']])
                         ->get()
                         ->toArray();
-                    $items=[];
+                    $items = [
+                        [
+                            'title' => "Yetkazib berish",
+                            'count' => 1,
+                            'price' => @Order::query()->where(['id' => $data['params']['account']['order_id']])->first()->delivery_price * 100 ?? 0,
+                            "vat_percent" => 12,
+                            "package_code" => "1202229"
+                        ]
+                    ];
                     foreach ($orderItems as $orderItem) {
-                        $items[]=[
-                            'discount'=>0,
-                            'title'=>Product::query()->where(['id'=>$orderItem['product_id']])->get('name')->first()->name,
-                            'price'=>Product::query()->where(['id'=>$orderItem['product_id']])->get('price')->first()->price*100,
-                            'count'=>$orderItem['quantity'],
-                            'code'=>'10202001002000000',
-                            'vat_percent'=>'12',
-                            'package_code'=>'1372873'
+                        $items[] = [
+                            'discount' => 0,
+                            'title' => Product::query()->where(['id' => $orderItem['product_id']])->get('name')->first()->name,
+                            'price' => Product::query()->where(['id' => $orderItem['product_id']])->get('price')->first()->price * 100,
+                            'count' => $orderItem['quantity'],
+                            'code' => '10202001001000001',
+                            'vat_percent' => '12',
+                            'package_code' => '1541963'
                         ];
                     }
                     return json_encode([
                         "result" => [
                             "allow" => true,
-                            'detail'=>[
-                                'receipt_type'=>1,
-                                'shipping'=>[
-                                  'title'=>'Manzilgacha',
-                                  'price'=>@Order::query()->where(['id'=>$data['params']['account']['order_id']])->first()->delivery_price??0,
-                                ],
-                                'items'=>$items
+                            'detail' => [
+                                'receipt_type' => 0,
+                                'items' => $items
                             ]
                         ]
                     ]);
@@ -70,7 +74,7 @@ class PaymeController extends Controller
                     return json_encode([
                         "result" => [
                             'create_time' => Transaction::datetime2timestamp($transaction['create_time']),
-                            'perform_time' => Transaction::datetime2timestamp($transaction['perform_time'])??0,
+                            'perform_time' => Transaction::datetime2timestamp($transaction['perform_time']) ?? 0,
                             'cancel_time' => $transaction['cancel_time'] ?? 0,
                             'transaction' => (string)$transaction['paycom_transaction_id'],
                             'state' => $transaction['state'],
