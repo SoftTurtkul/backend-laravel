@@ -14,7 +14,7 @@ class PartnerService extends CRUDService
     }
 
     public function all() {
-        return $this->success(['partners' => Partner::all()]);
+        return $this->indexResponse(Partner::query()->paginate(100));
     }
 
     public function save($request) {

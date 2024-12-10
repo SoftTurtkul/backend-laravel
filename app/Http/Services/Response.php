@@ -10,6 +10,9 @@ trait Response {
             'msg' => $msg
         ]);
     }
+    protected function indexResponse( $data){
+        return response()->json($data);
+    }
 
     protected function fail($errors = [], $msg = 'Muvaffaqiyatsiz') {
         return response()->json([
