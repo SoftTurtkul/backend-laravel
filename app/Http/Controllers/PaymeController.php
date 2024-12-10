@@ -38,16 +38,16 @@ class PaymeController extends Controller
                             'title' => "Yetkazib berish",
                             'count' => 1,
                             'price' => @Order::query()->where(['id' => $data['params']['account']['order_id']])->first()->delivery_price * 100 ?? 0,
+                            "code"=> "10112006004000000",
                             "vat_percent" => 12,
                             "package_code" => "1202229"
                         ]
                     ];
                     foreach ($orderItems as $orderItem) {
                         $items[] = [
-                            'discount' => 0,
                             'title' => Product::query()->where(['id' => $orderItem['product_id']])->get('name')->first()->name,
-                            'price' => Product::query()->where(['id' => $orderItem['product_id']])->get('price')->first()->price * 100,
                             'count' => $orderItem['quantity'],
+                            'price' => Product::query()->where(['id' => $orderItem['product_id']])->get('price')->first()->price * 100,
                             'code' => '10202001001000001',
                             'vat_percent' => '12',
                             'package_code' => '1541963'
