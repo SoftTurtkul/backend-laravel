@@ -21,6 +21,9 @@ class PartnerController extends Controller {
     public function index() {
         return $this->service->all();
     }
+    public function indexPublic() {
+        return $this->service->publicAll();
+    }
 
     public function store(PartnerRequest $request) {
         return $this->service->save($request);

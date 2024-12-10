@@ -24,7 +24,7 @@ use App\Http\Controllers\UserController;
 */
 
 Route::prefix('/customers')->group(function () {
-    Route::get('/get-partners', [PartnerController::class, 'index']);
+    Route::get('/get-partners', [PartnerController::class, 'indexPublic']);
     Route::get('/{partner}/get-products', [ProductController::class, 'categoryProducts']);
 });
 Route::middleware('auth:sanctum')->group(function () {

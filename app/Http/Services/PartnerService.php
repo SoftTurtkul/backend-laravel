@@ -34,4 +34,9 @@ class PartnerService extends CRUDService
         }
         return parent::update($partner, $data);
     }
+
+    public function publicAll()
+    {
+        return $this->success(['partners' => Partner::all()]);
+    }
 }
