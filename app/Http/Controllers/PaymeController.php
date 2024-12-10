@@ -9,7 +9,7 @@ use App\Models\Transaction;
 
 class PaymeController extends Controller
 {
-    const test_token = "Drb4rksirx6NhWqJa@R%YeSj3jC&aTRKUbQK";
+    const test_token = "4aa0n805So%uvv0r@jmCjexE%?is6NtJKtGx";
     const user = "Paycom";
 
     public function index()
@@ -87,7 +87,8 @@ class PaymeController extends Controller
                 break;
             case 'PerformTransaction':
                 return $this->PerformTransaction($data['params']);
-                break;
+            case 'CancelTransaction':
+                return $this->CancelTransaction($data['params']);
         }
     }
 
@@ -259,6 +260,24 @@ class PaymeController extends Controller
                     "uz" => "Unknown state",
                 ]);
         }
+    }
+
+    private function CancelTransaction($params)
+    {
+        $transaction = Transaction::query()->where(['paycom_transaction_id' => $params['id']])->first();
+        $cancel_time = Transaction::totimestamp(true);
+        $transaction->state = Transaction::STATE_CANCELLED;
+        $transaction->reason = $params['reason'];
+        $transaction->cancel_time=$cancel_time;
+        $transaction->update();
+        $transaction->refresh();
+        return json_encode([
+            "result" => [
+                'transaction' => $params['id'],
+                'state' => Transaction::STATE_CANCELLED,
+                'cancel_time'=>Transaction::datetime2timestamp($cancel_time),
+            ]
+        ]);
     }
 
 }
