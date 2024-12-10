@@ -36,7 +36,7 @@ class MessageService
                     'form_params' => [
                         'chat_id' => -1002444198264,
                         'message_thread_id'=>12,
-                        'text' => $message.PHP_EOL."Phone: ".$phone,
+                        'text' => $message.PHP_EOL,
                     ]
                 ]
             );
