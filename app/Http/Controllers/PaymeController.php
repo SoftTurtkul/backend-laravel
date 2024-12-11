@@ -50,7 +50,7 @@ class PaymeController extends Controller
                             'price' => Product::query()->where(['id' => $orderItem['product_id']])->get('price')->first()->price * 100,
                             'code' => '10202001001000001',
                             'vat_percent' => 12,
-                            'package_code' => '1541963'
+                            'package_code' => '1372863'
                         ];
                     }
                     return json_encode([
