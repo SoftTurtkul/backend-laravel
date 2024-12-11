@@ -57,6 +57,7 @@ class PaymeController extends Controller
                         "result" => [
                             "allow" => true,
                             'detail' =>[
+                                'receipt_type'=>0,
                                 'items'=>$items
                             ]
                         ]
