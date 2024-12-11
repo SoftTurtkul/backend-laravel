@@ -56,7 +56,9 @@ class PaymeController extends Controller
                     return json_encode([
                         "result" => [
                             "allow" => true,
-                            'detail' =>$items
+                            'detail' =>[
+                                'items'=>$items
+                            ]
                         ]
                     ]);
                 }
