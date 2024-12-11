@@ -62,6 +62,7 @@ class OrderController extends Controller
     public function store(OrderRequest $request)
     {
         $data = $request->validated();
+        $data['total_price']+=$data['delivery_price'];
         $order = Order::query()->create($data);
         foreach ($data['order_items'] as $item) {
             DB::table('order_items')->insert([
