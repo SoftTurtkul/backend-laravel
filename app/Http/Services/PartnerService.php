@@ -32,6 +32,7 @@ class PartnerService extends CRUDService
             $data['img'] = $this->saveImage($request->file('img'), 'partners');
             $this->deleteFile($partner->img, 'partners');
         }
+        dd($data);
         return parent::update($partner, $data);
     }
 
