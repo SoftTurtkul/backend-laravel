@@ -26,7 +26,7 @@ class PartnerService extends CRUDService
         return parent::store($data);
     }
 
-    public function upgrade($partner, $request) {
+    public function update($partner, $request) {
         $data = $request->validated();
         if ($request->hasFile('img')) {
             $data['img'] = $this->saveImage($request->file('img'), 'partners');
