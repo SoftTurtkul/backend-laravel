@@ -43,6 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::resource('delivery', DeliveryController::class);
         Route::get('deliveries/stat',[DeliveryController::class,'statDelivery']);
         Route::get('partner/stat',[PartnerController::class,'statPartner']);
+        Route::get('partner/overall',[PartnerController::class,'statPartnerOverall']);
         Route::post('drivers/{driver}/activate', [DriverController::class, 'activate']);
     });
 

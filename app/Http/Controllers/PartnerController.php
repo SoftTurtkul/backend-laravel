@@ -67,6 +67,27 @@ class PartnerController extends Controller
             ->select(
                 'orders.partner_id',
                 'partners.name as partner_name',
+                DB::raw('COUNT(CASE WHEN DATE(histories.created_at) = ' . $today . ' THEN 1 END) AS daily_count'),
+                DB::raw('COUNT(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) AND MONTH(histories.created_at) = MONTH(CURDATE()) THEN 1 END) AS monthly_count'),
+                DB::raw('COUNT(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) THEN 1 END) AS yearly_count'),
+                DB::raw('SUM(CASE WHEN DATE(histories.created_at) = ' . $today . ' THEN (orders.total_price - orders.delivery_price) ELSE 0 END) AS daily_sum'),
+                DB::raw('SUM(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) AND MONTH(histories.created_at) = MONTH(CURDATE()) THEN (orders.total_price - orders.delivery_price) ELSE 0 END) AS monthly_sum'),
+                DB::raw('SUM(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) THEN (orders.total_price - orders.delivery_price) ELSE 0 END) AS yearly_sum')
+            )
+            ->where('histories.status', 2)  // Filter by status = 2
+            ->groupBy('orders.partner_id', 'partners.name')  // Group by partner_id and partner name
+            ->paginate(\request()->get('limit', 20))
+            ->toArray());
+    }
+
+    public function statPartnerOverall()
+    {
+        $today = now()->format('Y-m-d');  // Today's date in 'Y-m-d' format
+
+        return $this->indexResponse(History::query()
+            ->join('orders', 'histories.order_id', '=', 'orders.id')
+            ->join('partners', 'orders.partner_id', '=', 'partners.id')
+            ->select(
                 DB::raw('COUNT(CASE WHEN DATE(histories.created_at) = '.$today.' THEN 1 END) AS daily_count'),
                 DB::raw('COUNT(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) AND MONTH(histories.created_at) = MONTH(CURDATE()) THEN 1 END) AS monthly_count'),
                 DB::raw('COUNT(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) THEN 1 END) AS yearly_count'),
@@ -75,8 +96,7 @@ class PartnerController extends Controller
                 DB::raw('SUM(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) THEN (orders.total_price - orders.delivery_price) ELSE 0 END) AS yearly_sum')
             )
             ->where('histories.status', 2)  // Filter by status = 2
-            ->groupBy('orders.partner_id', 'partners.name')  // Group by partner_id and partner name
-            ->paginate(\request()->get('limit', 20))
+            ->get()
             ->toArray());
     }
 }
