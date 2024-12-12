@@ -34,7 +34,7 @@ class PartnerController extends Controller {
     }
 
     public function update(PartnerUpdateRequest $request, Partner $partner) {
-        return $this->service->update($partner, $request->validated());
+        return $this->service->update($partner, $request);
     }
 
     public function destroy(Partner $partner) {
