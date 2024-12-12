@@ -238,6 +238,21 @@ class DeliveryController extends Controller
             ->get()// Filter by status 4 or 31
             ->toArray());
     }
+    public function statDeliveryDaily(){
+        $today = now()->format('Y-m-d');  // Today's date in 'Y-m-d' format
+        return $this->indexResponse(
+            Order::query()
+            ->with('customer')
+            ->with('partner')
+            ->with('items')
+            ->whereDay('created_at', '=', now()->day)
+            ->where(['driver_id'=>\request()->route('partner')])
+            ->get()
+            ->toArray()
+            );
+
+
+    }
 //    public function offer() {
 //        return Storage::get(public_path('taxi.pdf'));
 //    }
