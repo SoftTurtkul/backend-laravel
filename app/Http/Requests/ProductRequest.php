@@ -23,6 +23,7 @@ class ProductRequest extends BaseRequest {
             'category_id' => 'required|numeric',
             'img' => '',
             'price' => 'required|min:1',
+            'quantity' => 'required|min:1',
             'description' => '',
             'discount' => '',
             'status' => ''
