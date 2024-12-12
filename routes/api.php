@@ -27,7 +27,7 @@ Route::prefix('/customers')->group(function () {
     Route::get('/get-partners', [PartnerController::class, 'indexPublic']);
     Route::get('/{partner}/get-products', [ProductController::class, 'categoryProducts']);
 });
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('throttle:60')->group(function () {
     Route::prefix('/admin')->group(function () {
         Route::resource('users', UserController::class);
         Route::post('/drivers/{driver}/add-sum', [DriverController::class, 'addSum']);
@@ -41,6 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::resource('clients', ClientController::class);
         Route::resource('orders', OrderController::class);
         Route::resource('delivery', DeliveryController::class);
+        Route::get('deliveries/stat',[DeliveryController::class,'statDelivery']);
         Route::post('drivers/{driver}/activate', [DriverController::class, 'activate']);
     });
 
