@@ -36,6 +36,7 @@ class Order extends Model {
     public  function items() {
         return $this->hasMany(OrderItem::class);
     }
+    
 
 //    public function getClientAttribute() {
 //        return $this->customer;
