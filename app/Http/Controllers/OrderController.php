@@ -25,7 +25,8 @@ class OrderController extends Controller
     public function getOrdersByStatus(Request $request, $customer = null)
     {
         if ($customer != null) return $this->success([
-            'orders' => Order::query()->with('client')
+            'orders' => Order::query()->with('customer')
+                ->with('partner')
                 ->where('customer_id', $customer)
                 ->whereIn('status', [-1,4,2])
                 ->orderByDesc('id')->get()
