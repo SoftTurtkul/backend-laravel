@@ -38,6 +38,7 @@ class PartnerService extends CRUDService
 
     public function updateImage(Partner $partner, \App\Http\Requests\PartnerUpdateRequest $request)
     {
+        $data = $request->validated();
         if ($request->hasFile('img')){
             $data['img'] = $this->saveImage($request->file('img'), 'partners');
             $this->deleteFile($partner->img,'partners');

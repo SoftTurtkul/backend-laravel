@@ -42,6 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::resource('orders', OrderController::class);
         Route::resource('delivery', DeliveryController::class);
         Route::get('deliveries/stat',[DeliveryController::class,'statDelivery']);
+        Route::get('deliveries/{delivery}/stat',[DeliveryController::class,'statDeliveryDaily']);
         Route::get('deliveries/overall',[DeliveryController::class,'statDeliveryOverall']);
         Route::get('partner/stat',[PartnerController::class,'statPartner']);
         Route::get('partner/overall',[PartnerController::class,'statPartnerOverall']);
