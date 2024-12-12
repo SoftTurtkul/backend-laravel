@@ -28,16 +28,20 @@ class PartnerService extends CRUDService
 
     public function update($partner, $request) {
         $data = $request->validated();
-        if ($request->hasFile('img')) {
-            $data['img'] = $this->saveImage($request->file('img'), 'partners');
-            $this->deleteFile($partner->img, 'partners');
-        }
-        dd($data,$request->toArray());
         return parent::update($partner, $data);
     }
 
     public function publicAll()
     {
         return $this->success(['partners' => Partner::all()]);
+    }
+
+    public function updateImage(Partner $partner, \App\Http\Requests\PartnerUpdateRequest $request)
+    {
+        if ($request->hasFile('img')){
+            $data['img'] = $this->saveImage($request->file('img'), 'partners');
+            $this->deleteFile($partner->img,'partners');
+        }
+        return parent::update($partner, $data);
     }
 }

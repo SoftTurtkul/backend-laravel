@@ -36,6 +36,9 @@ class PartnerController extends Controller {
     public function update(PartnerUpdateRequest $request, Partner $partner) {
         return $this->service->update($partner, $request);
     }
+    public function updateImage(PartnerUpdateRequest $request, Partner $partner) {
+        return $this->service->updateImage($partner, $request);
+    }
 
     public function destroy(Partner $partner) {
         return $this->service->destroy($partner);

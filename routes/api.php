@@ -36,6 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::resource('cars', CarController::class);
         Route::resource('tariffs', TariffController::class);
         Route::resource('partners', PartnerController::class);
+        Route::post('partners/{partner}',[PartnerController::class,'updateImage']);
         Route::resource('customers', CustomerController::class);
         Route::resource('clients', ClientController::class);
         Route::resource('orders', OrderController::class);

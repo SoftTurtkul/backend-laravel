@@ -31,7 +31,7 @@ class PartnerUpdateRequest extends BaseRequest
             'end_time' => '',
             'address' => '',
             'phone' => '',
-            'img' => '',
+            'img' => 'nullable|file',
             'longitude' => '',
             'latitude' => '',
             'open' => 'nullable|boolean',
