@@ -15,12 +15,14 @@ class OrderController extends Controller
 {
     public function index(Partner $partner)
     {
-        if (\request()->routeIs('orders.index')) {
             $query = Order::query();
             if (\request()->has('from') && \request()->has('to')) {
                 $from = \request()->input('from');
                 $to = \request()->input('to');
                 $query = $query->whereRaw("date(created_at)>='{$from}' and date(created_at)<='{$to}'");
+            }
+            if(\request()->route('partner')) {
+                $query = $query->where('partner_id', \request()->route('partner'));
             }
             if(\request()->has('partner_id')) {
                 $query = $query->where('partner_id', \request()->input('partner_id'));
@@ -40,9 +42,6 @@ class OrderController extends Controller
             ->toArray();
             return $this->indexResponse($query);
         }
-        return $this->indexResponse($partner->orders->paginate(\request('limit', 20))->toArray());
-
-    }
 
     public function getOrdersByStatus(Request $request, $customer = null)
     {
