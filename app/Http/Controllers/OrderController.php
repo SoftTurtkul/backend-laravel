@@ -16,7 +16,21 @@ class OrderController extends Controller
     public function index(Partner $partner)
     {
         if (\request()->routeIs('orders.index')) {
-            return $this->success(['orders' => Order::all()]);
+            $query = Order::query();
+            if (\request()->has('from') && \request()->has('to')) {
+                $from = \request()->input('from');
+                $to = \request()->input('to');
+                $query = $query->whereBetween('created_at', [$from, $to]);
+            }
+            $query = $query->orderBy('created_at')
+                ->with('items')
+                ->with('customer')
+                ->with('items.product')
+                ->with('partner')
+            ->get()
+            ->toArray();
+
+            return $this->success(['orders' => $query]);
         }
         return $this->success(['orders' => $partner->orders]);
 
@@ -28,7 +42,7 @@ class OrderController extends Controller
             'orders' => Order::query()->with('customer')
                 ->with('partner')
                 ->where('customer_id', $customer)
-                ->whereIn('status', [-1,4,2])
+                ->whereIn('status', [-1, 4, 2])
                 ->orderByDesc('id')->get()
         ]);
 
@@ -47,7 +61,7 @@ class OrderController extends Controller
                 ->with('partner')
                 ->with('driver')
                 ->orderBy('id')
-                ->whereIn('status', [0, 1, 2, 3,10,31])->get()
+                ->whereIn('status', [0, 1, 2, 3, 10, 31])->get()
         ]);
     }
 
@@ -67,7 +81,7 @@ class OrderController extends Controller
     public function store(OrderRequest $request)
     {
         $data = $request->validated();
-        $data['total_price']+=$data['delivery_price'];
+        $data['total_price'] += $data['delivery_price'];
         $order = Order::query()->create($data);
         foreach ($data['order_items'] as $item) {
             DB::table('order_items')->insert([
