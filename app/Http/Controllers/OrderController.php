@@ -21,9 +21,8 @@ class OrderController extends Controller
                 $to = \request()->input('to');
                 $query = $query->whereRaw("date(created_at)>='{$from}' and date(created_at)<='{$to}'");
             }
-            dd(\request()->route());
-            if(\request()->route('partner')) {
-                $query = $query->where('partner_id', \request()->route('partner'));
+            if($partner->id) {
+                $query = $query->where('partner_id', $partner->id);
             }
             if(\request()->has('partner_id')) {
                 $query = $query->where('partner_id', \request()->input('partner_id'));
