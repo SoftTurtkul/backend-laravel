@@ -46,7 +46,7 @@ class OrderController extends Controller
                 ->with('customer')
                 ->with('partner')
                 ->with('driver')
-                ->orderByDesc('id')
+                ->orderBy('id')
                 ->whereIn('status', [0, 1, 2, 3,10,31])->get()
         ]);
     }
