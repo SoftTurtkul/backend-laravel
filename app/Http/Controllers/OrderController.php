@@ -43,7 +43,11 @@ class OrderController extends Controller
     {
         return $this->success([
             'orders' => Order::query()->where('customer_id', $customer)
-                ->whereIn('status', [0, 1, 2, 3])->get()
+                ->with('customer')
+                ->with('partner')
+                ->with('driver')
+                ->orderByDesc('id')
+                ->whereIn('status', [0, 1, 2, 3,10,31])->get()
         ]);
     }
 

@@ -36,7 +36,10 @@ class Order extends Model {
     public  function items() {
         return $this->hasMany(OrderItem::class);
     }
-    
+    public function driver() {
+        return $this->belongsTo(Delivery::class, 'driver_id','id');
+    }
+
 
 //    public function getClientAttribute() {
 //        return $this->customer;
