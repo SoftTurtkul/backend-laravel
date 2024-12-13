@@ -59,7 +59,8 @@ class PartnerController extends Controller
 
     public function statPartner()
     {
-        $today = now()->format('Y-m-d');  // Today's date in 'Y-m-d' format
+
+        $today = \request()->has('date')?\request()->get('date'):now()->format('Y-m-d');  // Today's date in 'Y-m-d' format
         $query=History::query()
             ->join('orders', 'histories.order_id', '=', 'orders.id')
             ->join('partners', 'orders.partner_id', '=', 'partners.id')
@@ -74,11 +75,6 @@ class PartnerController extends Controller
                 DB::raw('SUM(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) THEN (orders.total_price - orders.delivery_price) ELSE 0 END) AS yearly_sum')
             )
             ->where('histories.status', 2);  // Filter by status = 2
-        if(\request()->has('from') && \request()->has('to')){
-            $from = \request()->input('from');
-            $to = \request()->input('to');
-            $query=$query->whereBetween('histories.created_at', [$from, $to]);
-        }
         return $this->indexResponse($query
             ->groupBy('orders.partner_id', 'partners.name')  // Group by partner_id and partner name
             ->paginate(\request()->get('limit', 20))
