@@ -27,12 +27,11 @@ class OrderController extends Controller
                 ->with('customer')
                 ->with('items.product')
                 ->with('partner')
-            ->get()
+            ->paginate(\request('limit', 20))
             ->toArray();
-
-            return $this->success(['orders' => $query]);
+            return $this->indexResponse($query);
         }
-        return $this->success(['orders' => $partner->orders]);
+        return $this->indexResponse($partner->orders->paginate(\request('limit', 20))->toArray());
 
     }
 
