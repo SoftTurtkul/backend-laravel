@@ -176,7 +176,7 @@ class DeliveryController extends Controller
     public function me()
     {
         $id = \auth('sanctum')->user()->id;
-        $ordersCount=History::query()->where('driver_id', $id)->whereDay('created_at', '=', now()->day)->where('status',Order::STATE_FINISHED)->orderByDesc('created_at')->count();
+        $ordersCount = History::query()->where('driver_id', $id)->whereDay('created_at', '=', now()->day)->where('status', Order::STATE_FINISHED)->orderByDesc('created_at')->count();
         return $this->success(
             ['profile' => Delivery::query()
                 ->where(['id' => $id])
@@ -199,57 +199,64 @@ class DeliveryController extends Controller
             ->first();
         return $this->success($order);
     }
-    public function statDelivery(){
+
+    public function statDelivery()
+    {
         $today = now()->format('Y-m-d');  // Today's date in 'Y-m-d' format
         return $this->indexResponse(History::query()
-             ->join('orders', 'histories.order_id', '=', 'orders.id')
+            ->join('orders', 'histories.order_id', '=', 'orders.id')
             ->join('delivery', 'histories.driver_id', '=', 'delivery.id')
             ->select(
                 'histories.driver_id',
                 'delivery.name as driver_name',
-                DB::raw('COUNT(CASE WHEN DATE(histories.created_at) = '.$today.' THEN 1 END) AS daily_count'),
+                DB::raw('COUNT(CASE WHEN DATE(histories.created_at) = ' . $today . ' THEN 1 END) AS daily_count'),
                 DB::raw('COUNT(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) AND MONTH(histories.created_at) = MONTH(CURDATE()) THEN 1 END) AS monthly_count'),
                 DB::raw('COUNT(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) THEN 1 END) AS yearly_count'),
-                DB::raw('SUM(CASE WHEN DATE(histories.created_at) = '.$today.' THEN orders.delivery_price ELSE 0 END) AS daily_sum'),
+                DB::raw('SUM(CASE WHEN DATE(histories.created_at) = ' . $today . ' THEN orders.delivery_price ELSE 0 END) AS daily_sum'),
                 DB::raw('SUM(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) AND MONTH(histories.created_at) = MONTH(CURDATE()) THEN orders.delivery_price ELSE 0 END) AS monthly_sum'),
                 DB::raw('SUM(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) THEN orders.delivery_price ELSE 0 END) AS yearly_sum')
             )
-            ->where(['histories.status'=>31])  // Filter by status 4 or 31
+            ->where(['histories.status' => 31])  // Filter by status 4 or 31
             ->groupBy('histories.driver_id', 'delivery.name')
             ->paginate(\request()->get('limit', 20))
             ->toArray());
 
 
     }
-    public function statDeliveryOverall(){
+
+    public function statDeliveryOverall()
+    {
         $today = now()->format('Y-m-d');  // Today's date in 'Y-m-d' format
         return $this->indexResponse(History::query()
             ->join('orders', 'histories.order_id', '=', 'orders.id')
             ->join('delivery', 'histories.driver_id', '=', 'delivery.id')
             ->select(
-                DB::raw('COUNT(CASE WHEN DATE(histories.created_at) = '.$today.' THEN 1 END) AS daily_count'),
+                DB::raw('COUNT(CASE WHEN DATE(histories.created_at) = ' . $today . ' THEN 1 END) AS daily_count'),
                 DB::raw('COUNT(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) AND MONTH(histories.created_at) = MONTH(CURDATE()) THEN 1 END) AS monthly_count'),
                 DB::raw('COUNT(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) THEN 1 END) AS yearly_count'),
-                DB::raw('SUM(CASE WHEN DATE(histories.created_at) = '.$today.' THEN orders.delivery_price ELSE 0 END) AS daily_sum'),
+                DB::raw('SUM(CASE WHEN DATE(histories.created_at) = ' . $today . ' THEN orders.delivery_price ELSE 0 END) AS daily_sum'),
                 DB::raw('SUM(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) AND MONTH(histories.created_at) = MONTH(CURDATE()) THEN orders.delivery_price ELSE 0 END) AS monthly_sum'),
                 DB::raw('SUM(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) THEN orders.delivery_price ELSE 0 END) AS yearly_sum')
             )
-            ->where(['histories.status'=>31])
+            ->where(['histories.status' => 31])
             ->get()// Filter by status 4 or 31
             ->toArray());
     }
-    public function statDeliveryDaily(){
+
+    public function statDeliveryDaily()
+    {
         $today = now()->format('Y-m-d');  // Today's date in 'Y-m-d' format
         return $this->indexResponse(
             Order::query()
-            ->with('customer')
-            ->with('partner')
-            ->with('items')
-            ->whereRaw('DATE(orders.created_at) = "'.$today.'"')
-            ->where(['driver_id'=>\request()->route('delivery')])
-            ->paginate(\request()->get('limit', 20))
-            ->toArray()
-            );
+                ->with('customer')
+                ->with('partner')
+                ->with('items')
+                ->with('items.product')
+                ->whereRaw('DATE(orders.created_at) = "' . $today . '"')
+                ->where(['driver_id' => \request()->route('delivery')])
+                ->paginate(\request()->get('limit', 20))
+                ->toArray()
+        );
 
 
     }
