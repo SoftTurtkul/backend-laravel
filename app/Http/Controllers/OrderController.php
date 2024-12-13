@@ -20,7 +20,7 @@ class OrderController extends Controller
             if (\request()->has('from') && \request()->has('to')) {
                 $from = \request()->input('from');
                 $to = \request()->input('to');
-                $query = $query->whereBetween('created_at', [$from, $to]);
+                $query = $query->whereRaw("date(created_at) between '{$from}' and '{$to}'");
             }
             $query = $query->orderBy('created_at')
                 ->with('items')
