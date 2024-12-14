@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Http;
 
 class MessageService
 {
-    public string $email = 'roma_2020@mail.ru';
-    public string $password = '2gJ2pSmo0Bgr6OAjAlQzFpsWGx2mjDV3BZhtkSdW';
+    public string $email = 'azamattaganovv@gmail.com';
+    public string $password = 'bxeD5jsoZwgMZKl0eiKpFaqJn5YAki99vEGde66f';
 
     public function refreshToken()
     {

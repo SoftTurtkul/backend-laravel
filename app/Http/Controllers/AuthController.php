@@ -55,7 +55,7 @@ class AuthController extends Controller
             $driver->refresh();
             $sms=new MessageService();
             $sms->sendMessage($driver->phone,
-                "<#> Sizning tasdiqlash kodingiz: $driver->password.\nDarrov"
+                "<#> Darrov ilovasiga kirish uchun tasdiqlash kodi: $driver->password"
             );
             return $this->success([]);
         }
@@ -72,7 +72,7 @@ class AuthController extends Controller
             $delivery->refresh();
             $sms=new MessageService();
             $sms->sendMessage($delivery->phone,
-                "<#> Sizning tasdiqlash kodingiz: $delivery->password.\nDarrov"
+                "<#> Darrov ilovasiga kirish uchun tasdiqlash kodi: $delivery->password"
             );
             return $this->success([
 //                'code'=>$delivery->password
@@ -149,7 +149,7 @@ class AuthController extends Controller
         $customer->refresh();
         $sms=new MessageService();
         $sms->sendMessage($customer->phone,
-          "<#> Sizning tasdiqlash kodingiz: $customer->password.\nDarrov"
+          "<#> Darrov ilovasiga kirish uchun tasdiqlash kodi: $customer->password"
         );
         return $this->success([
 //            'code' => $customer->password
@@ -184,7 +184,7 @@ class AuthController extends Controller
         $client->refresh();
         $sms=new MessageService();
         $res=$sms->sendMessage($client->phone,
-            "<#> Sizning tasdiqlash kodingiz: $client->password.\nDarrov"
+            "<#> Darrov ilovasiga kirish uchun tasdiqlash kodi: $client->password"
         );
         return $this->success([
 //            'code' => $client->password
