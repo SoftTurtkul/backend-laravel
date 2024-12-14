@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\History;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\DB;
@@ -91,12 +92,18 @@ class OrderController extends Controller
         $data['total_price'] += $data['delivery_price'];
         $order = Order::query()->create($data);
         foreach ($data['order_items'] as $item) {
-            DB::table('order_items')->insert([
-                'order_id' => $order->id,
-                'product_id' => $item['product_id'],
-                'quantity' => $item['quantity'],
-                'price' => $item['price']
-            ]);
+            if($item['quantity'] > 0 && $item['quantity'] <= Product::query()->where('id', $item['product_id'])->first()->quantity) {
+                $inserted=DB::table('order_items')->insert([
+                    'order_id' => $order->id,
+                    'product_id' => $item['product_id'],
+                    'quantity' => $item['quantity'],
+                    'price' => $item['price']
+                ]);
+                if($inserted) {
+                    Product::query()->where('id', $item['product_id'])->decrement('quantity', $item['quantity']);
+                }
+            }
+
         }
         return $this->success([
             'order' => $order,
