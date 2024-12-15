@@ -39,6 +39,9 @@ class OrderController extends Controller
                 ->with('customer')
                 ->with('items.product')
                 ->with('partner')
+                ->whereHas('driver', function ($query) {
+                    return $query->with('driver');
+                })
             ->paginate(\request('limit', 20))
             ->toArray();
             return $this->indexResponse($query);
