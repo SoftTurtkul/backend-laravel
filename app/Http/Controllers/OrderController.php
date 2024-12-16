@@ -34,7 +34,7 @@ class OrderController extends Controller
             if(\request()->has('customer_id')) {
                 $query = $query->where('customer_id', \request()->input('customer_id'));
             }
-            $query = $query->orderByDesc('created_at')
+            $query = $query->orderBy('created_at')
                 ->with('items')
                 ->with('customer')
                 ->with('items.product')
