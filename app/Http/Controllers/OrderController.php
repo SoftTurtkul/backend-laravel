@@ -133,7 +133,12 @@ class OrderController extends Controller
             if($request->status=='-1'){
                 $items=OrderItem::query()->where(['order_id'=>$order->id])->get()->toArray();
                 foreach($items as $item){
-                    Product::query()->where('id', $item['product_id'])->increment('quantity', $item['quantity']);
+                    $product=Product::query()->where('id',$item['product_id'])->first();
+                    $product->quantity -= $item['quantity'];
+                    if($product->quantity==0){
+                        $product->status = 0;
+                    }
+                    $product->save();
                 }
             }
             return $this->success($order);
