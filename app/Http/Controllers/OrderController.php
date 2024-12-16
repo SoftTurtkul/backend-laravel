@@ -101,10 +101,12 @@ class OrderController extends Controller
                     'price' => $item['price']
                 ]);
                 if($inserted) {
-                    Product::query()->where('id', $item['product_id'])->decrement('quantity', $item['quantity']);
-                    if(Product::query()->where('id', $item['product_id'])->first()->get('quantity')==0) {
-                        Product::query()->where('id', $item['product_id'])->update(['status' => 0]);
+                    $product = Product::query()->where('id', $item['product_id'])->first();
+                    $product->quantity -= $item['quantity'];
+                    if($product->quantity==0){
+                        $product->status = 0;
                     }
+                    $product->save();
                 }
             }
 
