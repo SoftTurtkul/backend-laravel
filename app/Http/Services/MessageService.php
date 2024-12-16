@@ -27,22 +27,22 @@ class MessageService
             'from' => '4546',
             'callback_url' => route('receive_status')
         ]);
-        try {
-            (new Client())->post(
-                "https://api.telegram.org/bot"
-                . "7548694251:AAGHmbGxP1GDfsTWWuLVpl5jNq_cwfgKJDo"
-                . "/sendMessage",
-                [
-                    'form_params' => [
-                        'chat_id' => -1002444198264,
-                        'message_thread_id'=>12,
-                        'text' => $message.PHP_EOL,
-                    ]
-                ]
-            );
-        } catch (GuzzleException $e) {
-            echo $e->getMessage();
-        }
+//        try {
+//            (new Client())->post(
+//                "https://api.telegram.org/bot"
+//                . "7548694251:AAGHmbGxP1GDfsTWWuLVpl5jNq_cwfgKJDo"
+//                . "/sendMessage",
+//                [
+//                    'form_params' => [
+//                        'chat_id' => -1002444198264,
+//                        'message_thread_id'=>12,
+//                        'text' => $message.PHP_EOL,
+//                    ]
+//                ]
+//            );
+//        } catch (GuzzleException $e) {
+//            echo $e->getMessage();
+//        }
         return $res;
     }
 
