@@ -129,7 +129,7 @@ class OrderController extends Controller
             $history->save();
             $order->update(['status' => $request->status]);
             if($request->status=='-1'){
-                $items=OrderItem::query()->where(['order_id'=>$order->id])->first()->toArray();
+                $items=OrderItem::query()->where(['order_id'=>$order->id])->get()->toArray();
                 foreach($items as $item){
                     Product::query()->where('id', $item['product_id'])->increment('quantity', $item['quantity']);
                 }
