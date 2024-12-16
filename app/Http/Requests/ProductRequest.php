@@ -26,7 +26,6 @@ class ProductRequest extends BaseRequest {
             'quantity' => 'required|min:1',
             'description' => '',
             'discount' => '',
-            'status' => ''
         ];
     }
 }
