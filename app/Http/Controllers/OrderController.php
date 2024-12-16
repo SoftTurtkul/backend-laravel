@@ -134,9 +134,9 @@ class OrderController extends Controller
                 $items=OrderItem::query()->where(['order_id'=>$order->id])->get()->toArray();
                 foreach($items as $item){
                     $product=Product::query()->where('id',$item['product_id'])->first();
-                    $product->quantity -= $item['quantity'];
-                    if($product->quantity==0){
-                        $product->status = 0;
+                    $product->quantity += $item['quantity'];
+                    if($product->quantity>0){
+                        $product->status = 1;
                     }
                     $product->save();
                 }
