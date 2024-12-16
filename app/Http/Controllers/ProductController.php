@@ -35,7 +35,9 @@ class ProductController extends Controller {
             $data['img'] = $this->saveImage($request->file('img'), 'products');
             $this->deleteFile($product->img, 'products');
         }
-
+        if($data['quantity']>0){
+            $data['status']=1;
+        }
         $product->update($data);
         return $this->success(['product' => $product]);
     }
