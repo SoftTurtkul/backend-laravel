@@ -177,11 +177,13 @@ class DeliveryController extends Controller
     {
         $id = \auth('sanctum')->user()->id;
         $ordersCount = History::query()->where('driver_id', $id)->whereDay('created_at', '=', now()->day)->where('status', Order::STATE_FINISHED)->orderByDesc('created_at')->count();
+        $ordersSumm = History::query()->where('driver_id', $id)->whereDay('created_at', '=', now()->day)->where('status', Order::STATE_FINISHED)->orderByDesc('created_at')->sum('delivery_price');
         return $this->success(
             ['profile' => Delivery::query()
                 ->where(['id' => $id])
                 ->first(),
-                'ordersCount' => $ordersCount
+                'ordersCount' => $ordersCount,
+                'ordersSumm' => $ordersSumm,
             ]
         );
 
