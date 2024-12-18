@@ -181,9 +181,7 @@ class DeliveryController extends Controller
         $ordersSumm=0;
         foreach ($histories as $history) {
             $order=Order::query()->where('id','=',$history['order_id'])->first();
-            dd($history,$order);
-            exit();
-            $ordersSumm += $order['delivery_price'];
+            $ordersSumm += $order->delivery_price;
         }
         return $this->success(
             ['profile' => Delivery::query()
