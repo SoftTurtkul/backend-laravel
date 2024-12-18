@@ -98,6 +98,7 @@ class PartnerController extends Controller
                 DB::raw('SUM(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) THEN (orders.total_price - orders.delivery_price) ELSE 0 END) AS yearly_sum')
             )
             ->where('histories.status', 2)  // Filter by status = 2
+            ->orderBy('daily_count', 'desc')
             ->get()
             ->toArray());
     }
