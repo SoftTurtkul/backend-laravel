@@ -259,7 +259,7 @@ class DeliveryController extends Controller
                 ->with('partner')
                 ->with('items')
                 ->with('items.product')
-                ->whereRaw('DATE(orders.created_at) = "' . $today . '"')
+                ->whereRaw('DATE(orders.created_at) = DATE(CURDATE())')
                 ->where(['driver_id' => \request()->route('delivery')])
                 ->paginate(\request()->get('limit', 20))
                 ->toArray()
