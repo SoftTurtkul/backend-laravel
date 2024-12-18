@@ -20,7 +20,7 @@ class OrderController extends Controller
             if (\request()->has('from') && \request()->has('to')) {
                 $from = \request()->input('from');
                 $to = \request()->input('to');
-                $query = $query->whereRaw("date(created_at)>='{$from}' and date(created_at)<='{$to}'");
+                $query = $query->whereRaw("date(updated_at)>='{$from}' and date(updated_at)<='{$to}'");
             }
             if($partner->id) {
                 $query = $query->where('partner_id', $partner->id);
