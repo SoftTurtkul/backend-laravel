@@ -180,7 +180,7 @@ class DeliveryController extends Controller
         $histories = History::query()->where('driver_id',$id)->whereDay('created_at', '=', now()->day)->where(['status'=> Order::STATE_FINISHED])->orderByDesc('created_at')->get()->toArray();
         $ordersSumm=0;
         foreach ($histories as $history) {
-            $order=Order::query()->where(['id'=>$history['order_id']])->first()->get()->toArray();
+            $order=Order::query()->where('id','=',$history['order_id'])->first()->get()->toArray();
             dd($order);
             exit();
             $ordersSumm += $order['delivery_price'];
