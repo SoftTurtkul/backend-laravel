@@ -209,26 +209,23 @@ class DeliveryController extends Controller
 
     public function statDelivery()
     {
-        $today = now()->format('Y-m-d');  // Today's date in 'Y-m-d' format
-        return $this->indexResponse(History::query()
-            ->join('orders', 'histories.order_id', '=', 'orders.id')
-            ->join('delivery', 'histories.driver_id', '=', 'delivery.id')
-            ->select(
-                'histories.driver_id',
-                'delivery.name as driver_name',
-                DB::raw('COUNT(CASE WHEN DATE(histories.created_at) =DATE(CURDATE()) THEN 1 END) AS daily_count'),
-                DB::raw('COUNT(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) AND MONTH(histories.created_at) = MONTH(CURDATE()) THEN 1 END) AS monthly_count'),
-                DB::raw('COUNT(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) THEN 1 END) AS yearly_count'),
-                DB::raw('SUM(CASE WHEN DATE(histories.created_at) = DATE(CURDATE()) THEN orders.delivery_price ELSE 0 END) AS daily_sum'),
-                DB::raw('SUM(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) AND MONTH(histories.created_at) = MONTH(CURDATE()) THEN orders.delivery_price ELSE 0 END) AS monthly_sum'),
-                DB::raw('SUM(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) THEN orders.delivery_price ELSE 0 END) AS yearly_sum')
-            )
-            ->where(['histories.status' => 4])  // Filter by status 4 or 31
-            ->groupBy('histories.driver_id', 'delivery.name')
-            ->paginate(\request()->get('limit', 20))
-            ->toArray());
-
-
+        return $this->indexResponse(
+            Order::query()
+                ->join('delivery', 'orders.driver_id', '=', 'delivery.id')
+                ->select(
+                    'orders.driver_id',
+                    'delivery.name as driver_name',
+                    DB::raw('COUNT(CASE WHEN DATE(orders.updated_at) = DATE(CURDATE()) THEN 1 END) AS daily_count'),
+                    DB::raw('COUNT(CASE WHEN YEAR(orders.updated_at) = YEAR(CURDATE()) AND MONTH(orders.updated_at) = MONTH(CURDATE()) THEN 1 END) AS monthly_count'),
+                    DB::raw('COUNT(CASE WHEN YEAR(orders.updated_at) = YEAR(CURDATE()) THEN 1 END) AS yearly_count'),
+                    DB::raw('SUM(CASE WHEN DATE(orders.updated_at) = DATE(CURDATE()) THEN orders.delivery_price ELSE 0 END) AS daily_sum'),
+                    DB::raw('SUM(CASE WHEN YEAR(orders.updated_at) = YEAR(CURDATE()) AND MONTH(orders.updated_at) = MONTH(CURDATE()) THEN orders.delivery_price ELSE 0 END) AS monthly_sum'),
+                    DB::raw('SUM(CASE WHEN YEAR(orders.updated_at) = YEAR(CURDATE()) THEN orders.delivery_price ELSE 0 END) AS yearly_sum')
+                )
+                ->where(['orders.status' => 4])
+                ->groupBy('orders.driver_id', 'delivery.name')
+                ->paginate(\request()->get('limit', 20))
+                ->toArray());
     }
 
     public function statDeliveryOverall()
