@@ -28,8 +28,8 @@ class OrderController extends Controller
             if(\request()->has('partner_id')) {
                 $query = $query->where('partner_id', \request()->input('partner_id'));
             }
-            if(\request()->has('driver_id')) {
-                $query = $query->where('driver_id', \request()->input('driver_id'));
+            if(\request()->has('delivery_id')) {
+                $query = $query->where('driver_id', \request()->input('delivery_id'));
             }
             if(\request()->has('customer_id')) {
                 $query = $query->where('customer_id', \request()->input('customer_id'));
