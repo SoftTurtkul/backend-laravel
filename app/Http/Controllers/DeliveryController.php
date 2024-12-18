@@ -216,10 +216,10 @@ class DeliveryController extends Controller
             ->select(
                 'histories.driver_id',
                 'delivery.name as driver_name',
-                DB::raw('COUNT(CASE WHEN DATE(histories.created_at) = ' . $today . ' THEN 1 END) AS daily_count'),
+                DB::raw('COUNT(CASE WHEN DATE(histories.created_at) =DATE(CURDATE()) THEN 1 END) AS daily_count'),
                 DB::raw('COUNT(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) AND MONTH(histories.created_at) = MONTH(CURDATE()) THEN 1 END) AS monthly_count'),
                 DB::raw('COUNT(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) THEN 1 END) AS yearly_count'),
-                DB::raw('SUM(CASE WHEN DATE(histories.created_at) = ' . $today . ' THEN orders.delivery_price ELSE 0 END) AS daily_sum'),
+                DB::raw('SUM(CASE WHEN DATE(histories.created_at) = DATE(CURDATE()) THEN orders.delivery_price ELSE 0 END) AS daily_sum'),
                 DB::raw('SUM(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) AND MONTH(histories.created_at) = MONTH(CURDATE()) THEN orders.delivery_price ELSE 0 END) AS monthly_sum'),
                 DB::raw('SUM(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) THEN orders.delivery_price ELSE 0 END) AS yearly_sum')
             )
