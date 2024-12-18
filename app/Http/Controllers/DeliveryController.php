@@ -236,7 +236,7 @@ class DeliveryController extends Controller
         $today = now()->format('Y-m-d');  // Today's date in 'Y-m-d' format
         return $this->indexResponse(
             Order::query()
-            ->join('delivery', 'orders.drivery_id', '=', 'delivery.id')
+            ->join('delivery', 'orders.driver_id', '=', 'delivery.id')
                 ->select(
                     DB::raw('COUNT(CASE WHEN DATE(orders.updated_at) = DATE(CURDATE()) THEN 1 END) AS daily_count'),
                     DB::raw('COUNT(CASE WHEN YEAR(orders.updated_at) = YEAR(CURDATE()) AND MONTH(orders.updated_at) = MONTH(CURDATE()) THEN 1 END) AS monthly_count'),
