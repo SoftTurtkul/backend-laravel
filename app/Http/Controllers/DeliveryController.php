@@ -223,7 +223,7 @@ class DeliveryController extends Controller
                 DB::raw('SUM(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) AND MONTH(histories.created_at) = MONTH(CURDATE()) THEN orders.delivery_price ELSE 0 END) AS monthly_sum'),
                 DB::raw('SUM(CASE WHEN YEAR(histories.created_at) = YEAR(CURDATE()) THEN orders.delivery_price ELSE 0 END) AS yearly_sum')
             )
-            ->where(['histories.status' => 31])  // Filter by status 4 or 31
+            ->where(['histories.status' => 4])  // Filter by status 4 or 31
             ->groupBy('histories.driver_id', 'delivery.name')
             ->paginate(\request()->get('limit', 20))
             ->toArray());
