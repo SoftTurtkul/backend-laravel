@@ -27,7 +27,7 @@ class OrderController extends Controller
                 $query = $query->where(function ($query) {
                     $query->where('payment_type', 0)
                         ->whereExists(function ($subQuery) {
-                            $subQuery->select('id')
+                            $subQuery->select('orders.id')
                                 ->from('histories')
                                 ->whereColumn('histories.order_id', 'orders.id')
                                 ->where('histories.status', 10);
