@@ -120,7 +120,7 @@ class OrderController extends Controller
         }
         return $this->success([
             'order' => $order,
-            'payme' => $data['payment_type'] == 0 ? "https://checkout.payme.uz/" . base64_encode("m=6708c357e64d929b0e41a59b;ac.order_id=" . $order->id . ";a=" . ($data['total_price'] * 100)) : ''
+            'payme' => $data['payment_type'] == 0 ? "https://checkout.paycom.uz/" . base64_encode("m=6708c357e64d929b0e41a59b;ac.order_id=" . $order->id . ";a=" . ($data['total_price'] * 100)) : ''
         ]);
     }
 
