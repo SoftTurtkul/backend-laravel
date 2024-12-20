@@ -24,6 +24,16 @@ class OrderController extends Controller
             }
             if($partner->id) {
                 $query = $query->where('partner_id', $partner->id);
+                $query = $query->where(function ($query) {
+                    $query->where('payment_type', 0)
+                        ->whereExists(function ($subQuery) {
+                            $subQuery->select('id')
+                                ->from('histories')
+                                ->whereColumn('histories.order_id', 'orders.id')
+                                ->where('histories.status', 10);
+                        })
+                        ->orWhere('payment_type', 1);
+                });
             }
             if(\request()->has('partner_id')) {
                 $query = $query->where('partner_id', \request()->input('partner_id'));
