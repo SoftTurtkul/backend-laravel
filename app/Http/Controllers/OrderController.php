@@ -25,13 +25,10 @@ class OrderController extends Controller
             if($partner->id) {
                 $query = $query->where('partner_id', $partner->id);
                 $query = $query->where(function ($query) {
-                    $query->where('payment_type', 0)
-                        ->whereExists(function ($subQuery) {
-                            $subQuery->select('orders.id')
-                                ->from('histories')
-                                ->whereColumn('histories.order_id', 'orders.id')
-                                ->where('histories.status', 10);
-                        })
+                    $query->where(function ($query) {
+                        $query->where('payment_type', 0)
+                            ->where('status', '<>', 0);
+                    })
                         ->orWhere('payment_type', 1);
                 });
             }
